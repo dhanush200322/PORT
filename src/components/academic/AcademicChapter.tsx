@@ -50,7 +50,7 @@ export default function AcademicChapter({ chapter }: AcademicChapterProps) {
             <span className="inline-block px-3 py-1 mb-4 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-widest">
               {chapter.qualification}
             </span>
-            <h3 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-2">
+            <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-2">
               {chapter.title}
             </h3>
             <p className="text-white/60 font-medium">{chapter.school}</p>

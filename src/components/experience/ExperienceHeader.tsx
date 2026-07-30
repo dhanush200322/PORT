@@ -49,7 +49,7 @@ export default function ExperienceHeader() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        className="text-[var(--text-h1)] font-bold tracking-tight text-white mb-6 leading-[1.1]"
+        className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1]"
       >
         {words.map((word, idx) => (
           <motion.span

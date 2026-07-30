@@ -21,10 +21,10 @@ export async function POST(req: NextRequest) {
     const phone = formData.get("phone") as string;
     const whatsapp = formData.get("whatsapp") as string;
     const subject = formData.get("subject") as string;
-    const inquiryType = formData.get("inquiryType") as string;
+    const purpose = formData.get("purpose") as string;
     const message = formData.get("message") as string;
 
-    const files = formData.getAll("files") as File[];
+    const files = formData.getAll("attachments") as File[];
     
     // Parse files into Nodemailer attachment format
     const attachments = await Promise.all(
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Phone:</strong> ${phone}</p>
         <p><strong>WhatsApp:</strong> ${whatsapp || 'N/A'}</p>
-        <p><strong>Inquiry Type:</strong> ${inquiryType}</p>
+        <p><strong>Purpose:</strong> ${purpose}</p>
         <p><strong>Subject:</strong> ${subject}</p>
         <hr />
         <h3>Message:</h3>

@@ -59,7 +59,7 @@ export default function AboutContent() {
       {/* Left Column: Introduction */}
       <div className="flex-1 space-y-8">
         <motion.div variants={itemVariants} className="space-y-2">
-          <h2 className="text-[var(--text-h2)] font-bold tracking-tighter text-white">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-white">
             Hi, I'm Dhanush AV.
           </h2>
           <p className="text-[var(--text-body)] font-medium text-primary">

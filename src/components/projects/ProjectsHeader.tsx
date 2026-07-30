@@ -61,7 +61,7 @@ export default function ProjectsHeader() {
         Featured Projects
       </motion.span>
       
-      <h2 className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-[var(--text-h1)] font-bold tracking-tighter text-white mb-8 max-w-4xl">
+      <h2 className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter text-white mb-8 max-w-4xl">
         {words.map((word, i) => (
           <motion.span key={i} variants={wordVariants} className="inline-block">
             {word}

@@ -31,7 +31,7 @@ function StatItem({ finalValue, label, suffix = "" }: StatItemProps) {
 
   return (
     <div ref={ref} className="flex flex-col items-center justify-center p-6 text-center">
-      <div className="text-[var(--text-h2)] font-bold text-white mb-2 tracking-tight flex items-baseline">
+      <div className="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tight flex items-baseline">
         {displayValue}
         <span className="text-primary ml-1">{suffix}</span>
       </div>
@@ -44,7 +44,7 @@ function StatItem({ finalValue, label, suffix = "" }: StatItemProps) {
 
 export default function AchievementStats() {
   return (
-    <div className="w-full container-md py-20 relative z-20">
+    <div className="w-full max-w-5xl mx-auto px-6 py-20 relative z-20">
       
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent blur-3xl opacity-50" />
 

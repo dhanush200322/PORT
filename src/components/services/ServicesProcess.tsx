@@ -18,7 +18,7 @@ export default function ServicesProcess() {
   const pathLength = useTransform(scrollYProgress, [0, 0.8], [0, 1]);
 
   return (
-    <div ref={containerRef} className="relative w-full container-lg py-32 flex flex-col items-center">
+    <div ref={containerRef} className="relative w-full max-w-6xl mx-auto px-6 py-32 flex flex-col items-center">
       
       {/* Animated Background Grid */}
       <div 
@@ -39,7 +39,7 @@ export default function ServicesProcess() {
         <span className="inline-block px-3 py-1 rounded-full border border-primary/30 bg-primary/5 text-primary text-[10px] font-semibold uppercase tracking-widest mb-6">
           Process
         </span>
-        <h3 className="text-[var(--text-h2)] font-bold text-white tracking-tight">
+        <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
           How I Work
         </h3>
       </motion.div>

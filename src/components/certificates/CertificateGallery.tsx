@@ -29,7 +29,7 @@ export default function CertificateGallery() {
   };
 
   return (
-    <div className="relative w-full container-xl py-20 min-h-screen">
+    <div className="relative w-full max-w-7xl mx-auto px-6 py-20 min-h-screen">
       
       {/* Subtle Moving Spotlight Background */}
       <motion.div

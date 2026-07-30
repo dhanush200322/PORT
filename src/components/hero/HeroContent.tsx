@@ -25,7 +25,7 @@ export default function HeroContent() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-lg sm:text-xl md:text-2xl text-gray-custom mb-4 font-light tracking-wide"
+        className="text-lg sm:text-xl md:text-2xl text-gray-custom mb-6 font-light tracking-wide"
       >
         Hello, I'm
       </motion.p>
@@ -33,36 +33,12 @@ export default function HeroContent() {
       {/* Name Title */}
       <div className="overflow-hidden mb-6 flex justify-center">
         <motion.h1
-          className="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-bold tracking-tight text-white flex items-center justify-center"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: { opacity: 1 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.08,
-                delayChildren: 0.1,
-              },
-            },
-          }}
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="text-6xl sm:text-7xl md:text-8xl lg:text-[7.5rem] xl:text-[8.5rem] font-bold tracking-tighter text-white leading-none"
         >
-          {"DHANUSH AV".split("").map((char, index) => (
-            <motion.span
-              key={index}
-              variants={{
-                hidden: { y: "100%", opacity: 0 },
-                visible: { 
-                  y: 0, 
-                  opacity: 1,
-                  transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] }
-                },
-              }}
-              className={char === " " ? "w-4 md:w-8" : "inline-block"}
-            >
-              {char}
-            </motion.span>
-          ))}
+          DHANUSH AV
         </motion.h1>
       </div>
 
@@ -79,7 +55,7 @@ export default function HeroContent() {
           <span className="sm:hidden text-primary">&</span>
           <span>AI Automation Engineer</span>
         </h2>
-        <p className="text-[var(--text-body)] text-gray-custom leading-relaxed font-light">
+        <p className="text-lg sm:text-xl text-gray-custom leading-relaxed font-light">
           Building Scalable Web Applications & AI Solutions.
         </p>
       </motion.div>

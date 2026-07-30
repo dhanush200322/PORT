@@ -21,7 +21,7 @@ export default function ContactHeader() {
       </motion.div>
 
       {/* Heading (Word by Word reveal) */}
-      <h2 className="text-[var(--text-h1)] font-bold text-white tracking-tight leading-[1.1] mb-6 flex flex-wrap gap-x-3 gap-y-2">
+      <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-6 flex flex-wrap gap-x-3 gap-y-2">
         {words.map((word, i) => (
           <motion.span
             key={i}

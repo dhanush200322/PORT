@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { useLenis } from "lenis/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CertificateItem } from "./CertificateData";
 import { X, Download, FileText, CheckCircle2 } from "lucide-react";
@@ -11,7 +13,13 @@ interface CertificateModalProps {
 }
 
 export default function CertificateModal({ certificate, onClose }: CertificateModalProps) {
-  
+  const lenis = useLenis();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Close on escape key
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -25,13 +33,20 @@ export default function CertificateModal({ certificate, onClose }: CertificateMo
   useEffect(() => {
     if (certificate) {
       document.body.style.overflow = 'hidden';
+      lenis?.stop();
     } else {
       document.body.style.overflow = 'unset';
+      lenis?.start();
     }
-    return () => { document.body.style.overflow = 'unset'; };
-  }, [certificate]);
+    return () => { 
+      document.body.style.overflow = 'unset'; 
+      lenis?.start();
+    };
+  }, [certificate, lenis]);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {certificate && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-12">
@@ -48,6 +63,7 @@ export default function CertificateModal({ certificate, onClose }: CertificateMo
 
           {/* Modal Content */}
           <motion.div
+            data-lenis-prevent
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -92,7 +108,7 @@ export default function CertificateModal({ certificate, onClose }: CertificateMo
                      Completed
                    </span>
                  </div>
-                 <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-2">
+                 <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-2">
                    {certificate.title}
                  </h2>
                </div>
@@ -145,6 +161,7 @@ export default function CertificateModal({ certificate, onClose }: CertificateMo
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

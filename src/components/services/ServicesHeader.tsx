@@ -7,7 +7,7 @@ export default function ServicesHeader() {
   const words = headingText.split(" ");
 
   return (
-    <div className="flex flex-col items-center justify-center text-center container-md mb-24 md:mb-32 pt-20">
+    <div className="flex flex-col items-center justify-center text-center max-w-4xl mx-auto px-6 mb-24 md:mb-32 pt-20">
       
       {/* Label */}
       <motion.div
@@ -21,7 +21,7 @@ export default function ServicesHeader() {
       </motion.div>
 
       {/* Heading (Word by Word reveal) */}
-      <h2 className="text-[var(--text-h1)] font-bold text-white tracking-tight leading-[1.1] mb-8 flex flex-wrap justify-center gap-x-3 gap-y-2 md:gap-x-4">
+      <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1] mb-8 flex flex-wrap justify-center gap-x-3 gap-y-2 md:gap-x-4">
         {words.map((word, i) => (
           <motion.span
             key={i}

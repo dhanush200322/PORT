@@ -223,6 +223,7 @@ export default function ProjectInquiryForm({ onSuccess }: { onSuccess?: () => vo
             <label className="text-sm font-medium text-white/70 ml-1">Message Purpose *</label>
             <div className="relative">
               <select
+                suppressHydrationWarning
                 required
                 value={formData.purpose}
                 onChange={e => setFormData(prev => ({ ...prev, purpose: e.target.value }))}

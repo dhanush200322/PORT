@@ -82,7 +82,7 @@ export default function Navbar() {
                   {hoveredLink === link.name && (
                     <motion.div
                       layoutId="navbar-hover"
-                      className="absolute inset-x-0 -bottom-[1px] h-[2px] bg-primary rounded-t-md opacity-80"
+                      className="absolute left-1/2 -translate-x-1/2 -bottom-1 h-1 w-1 bg-primary rounded-full opacity-80"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
@@ -94,7 +94,7 @@ export default function Navbar() {
                   {isActive && hoveredLink !== link.name && (
                     <motion.div
                       layoutId="navbar-active"
-                      className="absolute inset-x-0 -bottom-[1px] h-[2px] bg-primary/50 rounded-t-md"
+                      className="absolute left-1/2 -translate-x-1/2 -bottom-1 h-1 w-1 bg-primary/50 rounded-full"
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}

@@ -1,7 +1,9 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { useLenis } from "lenis/react";
 import { Project } from "./ProjectData";
 import { X, ExternalLink, Lock } from "lucide-react";
 import Image from "next/image";
@@ -30,6 +32,12 @@ const GithubIcon = ({ className }: { className?: string }) => (
 );
 
 export default function ProjectModal({ project, onClose }: ProjectModalProps) {
+  const lenis = useLenis();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Close on Escape key
   useEffect(() => {
@@ -40,17 +48,24 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  // Lock body scroll when open
+  // Lock body scroll and stop Lenis when open
   useEffect(() => {
     if (project) {
       document.body.style.overflow = "hidden";
+      lenis?.stop();
     } else {
       document.body.style.overflow = "unset";
+      lenis?.start();
     }
-    return () => { document.body.style.overflow = "unset"; };
-  }, [project]);
+    return () => { 
+      document.body.style.overflow = "unset"; 
+      lenis?.start();
+    };
+  }, [project, lenis]);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {project && (
         <>
@@ -66,6 +81,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           {/* Modal Container */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 pointer-events-none">
             <motion.div
+              data-lenis-prevent
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -97,7 +113,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                      className="object-cover opacity-80"
                    />
                  )}
-                 <h2 className="text-[var(--text-h2)] font-bold text-white z-20 tracking-tighter">{project.title}</h2>
+                 <h2 className="text-3xl md:text-4xl font-bold text-white z-20 tracking-tighter">{project.title}</h2>
               </div>
 
               {/* Content */}
@@ -111,7 +127,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                     </span>
                     <span className="text-sm text-gray-custom">{project.meta.year}</span>
                   </div>
-                  <h2 className="text-[var(--text-h2)] font-bold text-white mb-2 tracking-tight">{project.title}</h2>
+                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">{project.title}</h2>
                   <p className="text-lg text-primary font-medium">{project.category}</p>
                 </div>
 
@@ -195,6 +211,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           </div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

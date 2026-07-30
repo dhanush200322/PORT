@@ -10,13 +10,13 @@ const TECH_STACK = [
 
 export default function TechStackWall() {
   return (
-    <div className="w-full container-xl py-32 relative z-10 border-t border-white/5 bg-gradient-to-b from-transparent to-black/20">
+    <div className="w-full max-w-7xl mx-auto px-6 py-32 relative z-10 border-t border-white/5 bg-gradient-to-b from-transparent to-black/20">
       
       <div className="text-center mb-16">
         <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-primary mb-4 block">
           Technical Arsenal
         </span>
-        <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight">
+        <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
           Tools of the Trade
         </h2>
       </div>

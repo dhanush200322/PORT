@@ -26,7 +26,7 @@ export default function Academic() {
           transition={{ duration: 0.8 }}
           className="max-w-3xl text-center mb-20"
         >
-          <p className="text-[var(--text-h3)] font-light text-white/80 leading-relaxed italic">
+          <p className="text-2xl md:text-3xl lg:text-4xl font-light text-white/80 leading-relaxed italic">
             "Every lesson learned became another building block toward becoming the developer I am today."
           </p>
         </motion.div>
@@ -51,7 +51,7 @@ export default function Academic() {
           <span className="text-sm font-medium uppercase tracking-[0.2em] text-primary mb-6">
             NEXT
           </span>
-          <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-8">
             Certifications & Achievements
           </h2>
           
