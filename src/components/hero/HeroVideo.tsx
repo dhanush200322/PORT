@@ -8,23 +8,13 @@ export default function HeroVideo() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   
-  // Set to true by default so browsers allow autoplay
-  const [isMuted, setIsMuted] = useState(true);
+  // Set to false by default as requested to autoplay with sound ON
+  const [isMuted, setIsMuted] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
-
-  useEffect(() => {
-    // Browsers strictly block unmuted autoplay. 
-    // We must start muted to guarantee autoplay works.
-    setIsMuted(true);
-    if (videoRef.current) {
-      videoRef.current.muted = true;
-      videoRef.current.play().catch(e => console.log("Autoplay failed:", e));
-    }
-  }, []);
 
   const handleContainerClick = () => {
     if (isMuted && videoRef.current) {
