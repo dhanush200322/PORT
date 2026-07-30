@@ -17,41 +17,22 @@ export default function HeroVideo() {
   });
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const attemptPlay = async () => {
-      try {
-        // Try to play unmuted first
-        video.muted = false;
-        setIsMuted(false);
-        await video.play();
-      } catch (error) {
-        console.log("Browser blocked unmuted autoplay, falling back to muted:", error);
-        // Fallback: Play muted so video plays automatically
-        video.muted = true;
-        setIsMuted(true);
-        video.play().catch(e => console.log("Muted autoplay also failed:", e));
-        
-        // Add a one-time interaction listener to unmute as soon as they interact
-        const enableSoundOnInteract = () => {
-          if (videoRef.current) {
-            videoRef.current.muted = false;
-            setIsMuted(false);
-          }
-          document.removeEventListener('click', enableSoundOnInteract);
-          document.removeEventListener('touchstart', enableSoundOnInteract);
-          document.removeEventListener('keydown', enableSoundOnInteract);
-        };
-        
-        document.addEventListener('click', enableSoundOnInteract);
-        document.addEventListener('touchstart', enableSoundOnInteract);
-        document.addEventListener('keydown', enableSoundOnInteract);
-      }
-    };
-
-    attemptPlay();
+    // Browsers strictly block unmuted autoplay. 
+    // We must start muted to guarantee autoplay works.
+    setIsMuted(true);
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(e => console.log("Autoplay failed:", e));
+    }
   }, []);
+
+  const handleContainerClick = () => {
+    if (isMuted && videoRef.current) {
+      videoRef.current.muted = false;
+      setIsMuted(false);
+      videoRef.current.play().catch(e => console.log("Play failed:", e));
+    }
+  };
 
   // Smooth parallax effect on scroll
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
@@ -70,17 +51,12 @@ export default function HeroVideo() {
     }
   };
 
-  // Auto-mute when scrolling past 75%, and auto-unmute when scrolling back up
+  // Auto-mute when scrolling past 75%
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (latest > 0.75 && !isMuted) {
       if (videoRef.current) {
         videoRef.current.muted = true;
         setIsMuted(true);
-      }
-    } else if (latest <= 0.75 && isMuted) {
-      if (videoRef.current) {
-        videoRef.current.muted = false;
-        setIsMuted(false);
       }
     }
   });
@@ -88,8 +64,9 @@ export default function HeroVideo() {
   return (
     <motion.div 
       ref={containerRef}
-      className="absolute inset-0 w-full h-full overflow-hidden bg-background"
+      className="absolute inset-0 w-full h-full overflow-hidden bg-background cursor-pointer"
       style={{ y, opacity }}
+      onClick={handleContainerClick}
     >
       {/* Cinematic Gradient Overlay */}
       <div 
