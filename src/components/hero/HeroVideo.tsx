@@ -206,7 +206,7 @@ export default function HeroVideo() {
       </motion.div>
 
       {/* Sound Toggle Button */}
-      <div className="absolute bottom-6 right-6 lg:bottom-8 lg:right-8 z-50 pointer-events-auto flex flex-col items-end">
+      <div className="absolute bottom-28 right-4 md:bottom-6 md:right-6 lg:bottom-8 lg:right-8 z-50 pointer-events-auto flex flex-col items-end">
         
         {/* Sleek, Professional Sound Indicator */}
         {isMuted && (
@@ -217,7 +217,7 @@ export default function HeroVideo() {
               opacity: { delay: 1.0, duration: 0.8 },
               y: { repeat: Infinity, duration: 2, ease: "easeInOut" } 
             }}
-            className="flex flex-col items-center mb-4 pointer-events-none mr-1 sm:mr-2"
+            className="flex flex-col items-center mb-3 md:mb-4 pointer-events-none mr-1 md:mr-2"
           >
             <div className="bg-black/40 backdrop-blur-md text-white/90 text-xs sm:text-sm font-medium px-4 py-2 sm:px-5 sm:py-2.5 rounded-full border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.5)] whitespace-nowrap tracking-wider flex items-center gap-2.5">
               <span className="relative flex h-2 w-2">
@@ -239,18 +239,18 @@ export default function HeroVideo() {
         <button
           onClick={toggleMute}
           suppressHydrationWarning
-          className="group flex items-center gap-0 hover:gap-3 px-3 py-3 sm:px-4 sm:py-3 rounded-full bg-black/20 hover:bg-black/60 backdrop-blur-md border border-white/5 hover:border-white/10 text-white/50 hover:text-white transition-all duration-300 overflow-hidden"
+          className="group flex items-center gap-2 md:gap-0 md:hover:gap-3 px-4 py-2.5 md:px-3 md:py-3 lg:px-4 lg:py-3 rounded-full bg-black/40 md:bg-black/20 hover:bg-black/60 backdrop-blur-md border border-white/10 md:border-white/5 hover:border-white/10 text-white md:text-white/50 hover:text-white transition-all duration-300 overflow-hidden"
           aria-label={isMuted ? "Unmute video" : "Mute video"}
         >
           {isMuted ? (
             <>
-              <VolumeX className="w-5 h-5 opacity-70 group-hover:opacity-100 shrink-0" />
-              <span className="text-sm font-medium opacity-0 max-w-0 group-hover:max-w-xs group-hover:opacity-70 transition-all duration-300 whitespace-nowrap overflow-hidden">Sound Off</span>
+              <VolumeX className="w-4 h-4 md:w-5 md:h-5 opacity-100 md:opacity-70 group-hover:opacity-100 shrink-0" />
+              <span className="text-xs md:text-sm font-medium opacity-100 max-w-full md:opacity-0 md:max-w-0 group-hover:max-w-xs group-hover:opacity-70 transition-all duration-300 whitespace-nowrap overflow-hidden">Sound Off</span>
             </>
           ) : (
             <>
-              <Volume2 className="w-5 h-5 text-primary opacity-70 group-hover:opacity-100 shrink-0" />
-              <span className="text-sm font-medium text-white opacity-0 max-w-0 group-hover:max-w-xs group-hover:opacity-100 transition-all duration-300 whitespace-nowrap overflow-hidden">Sound On</span>
+              <Volume2 className="w-4 h-4 md:w-5 md:h-5 text-primary opacity-100 md:opacity-70 group-hover:opacity-100 shrink-0" />
+              <span className="text-xs md:text-sm font-medium text-white opacity-100 max-w-full md:opacity-0 md:max-w-0 group-hover:max-w-xs group-hover:opacity-100 transition-all duration-300 whitespace-nowrap overflow-hidden">Sound On</span>
             </>
           )}
         </button>
