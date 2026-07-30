@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 
 export default function HeroVideo() {
@@ -15,6 +15,23 @@ export default function HeroVideo() {
     target: containerRef,
     offset: ["start start", "end start"],
   });
+
+  useEffect(() => {
+    // The user requested: "in mobile view hero section defeaulty voice sholud be On only"
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+      setIsMuted(false);
+      if (videoRef.current) {
+        videoRef.current.muted = false;
+        
+        // Attempt to play since browsers might block unmuted autoplay
+        videoRef.current.play().catch(e => {
+          console.log("Browser blocked unmuted autoplay:", e);
+        });
+      }
+    }
+  }, []);
 
   // Smooth parallax effect on scroll
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
