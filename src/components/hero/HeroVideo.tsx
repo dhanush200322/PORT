@@ -17,19 +17,15 @@ export default function HeroVideo() {
   });
 
   useEffect(() => {
-    // The user requested: "in mobile view hero section defeaulty voice sholud be On only"
-    const isMobile = window.innerWidth <= 768;
-    
-    if (isMobile) {
-      setIsMuted(false);
-      if (videoRef.current) {
-        videoRef.current.muted = false;
-        
-        // Attempt to play since browsers might block unmuted autoplay
-        videoRef.current.play().catch(e => {
-          console.log("Browser blocked unmuted autoplay:", e);
-        });
-      }
+    // Unmute the video by default on all views (laptop and mobile)
+    setIsMuted(false);
+    if (videoRef.current) {
+      videoRef.current.muted = false;
+      
+      // Attempt to play since browsers might block unmuted autoplay
+      videoRef.current.play().catch(e => {
+        console.log("Browser blocked unmuted autoplay:", e);
+      });
     }
   }, []);
 
