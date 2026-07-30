@@ -8,8 +8,8 @@ export default function HeroVideo() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   
-  // Set to false as requested so voice plays automatically on load
-  const [isMuted, setIsMuted] = useState(false);
+  // Set to true by default so browsers allow autoplay
+  const [isMuted, setIsMuted] = useState(true);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -25,6 +25,11 @@ export default function HeroVideo() {
       const newMutedState = !isMuted;
       videoRef.current.muted = newMutedState;
       setIsMuted(newMutedState);
+      
+      // If unmuting, ensure the video plays (browsers can pause on unmute)
+      if (!newMutedState) {
+        videoRef.current.play().catch(e => console.log("Play failed:", e));
+      }
     }
   };
 
