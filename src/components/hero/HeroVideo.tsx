@@ -208,21 +208,31 @@ export default function HeroVideo() {
       {/* Sound Toggle Button */}
       <div className="absolute bottom-6 right-6 lg:bottom-8 lg:right-8 z-50 pointer-events-auto flex flex-col items-end">
         
-        {/* Animated Tooltip & Arrow to draw attention (Highly visible on mobile) */}
+        {/* Sleek, Professional Sound Indicator */}
         {isMuted && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: [0, 15, 0] }}
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: [0, 8, 0] }}
             transition={{ 
-              opacity: { delay: 1.0, duration: 0.5 },
-              y: { repeat: Infinity, duration: 1.5, ease: "easeInOut" } 
+              opacity: { delay: 1.0, duration: 0.8 },
+              y: { repeat: Infinity, duration: 2, ease: "easeInOut" } 
             }}
-            className="flex flex-col items-center mb-3 sm:mb-4 pointer-events-none mr-2 sm:mr-4"
+            className="flex flex-col items-center mb-4 pointer-events-none mr-1 sm:mr-2"
           >
-            <div className="bg-primary/90 backdrop-blur-sm text-white text-sm sm:text-base font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-full shadow-[0_0_20px_rgba(var(--primary),0.6)] whitespace-nowrap border border-white/30 tracking-wide">
-              SOUND ON 🔊
+            <div className="bg-black/40 backdrop-blur-md text-white/90 text-xs sm:text-sm font-medium px-4 py-2 sm:px-5 sm:py-2.5 rounded-full border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.5)] whitespace-nowrap tracking-wider flex items-center gap-2.5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+              ENABLE SOUND
             </div>
-            <ArrowDown className="w-8 h-8 sm:w-10 sm:h-10 text-primary mt-2 drop-shadow-[0_0_15px_rgba(var(--primary),0.8)]" />
+            <motion.div 
+              className="mt-2 text-white/50"
+              animate={{ opacity: [0.3, 1, 0.3] }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            >
+              <ArrowDown className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={1.5} />
+            </motion.div>
           </motion.div>
         )}
 
