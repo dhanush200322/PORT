@@ -1,19 +1,31 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import FooterConstellation from "./FooterConstellation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function FooterBackground() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Smooth out the spotlight movement
+  const springX = useSpring(mouseX, { stiffness: 50, damping: 30 });
+  const springY = useSpring(mouseY, { stiffness: 50, damping: 30 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+      // Calculate center of screen
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      
+      // We want the spotlight to move relative to the center, similar to before (mousePos.x / 15)
+      // but starting centered.
+      mouseX.set((e.clientX - centerX) / 15);
+      mouseY.set((e.clientY - centerY) / 15);
     };
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+  }, [mouseX, mouseY]);
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 bg-black">
@@ -53,11 +65,7 @@ export default function FooterBackground() {
 
       {/* Layer 2: Soft radial spotlight (Follows mouse slightly) */}
       <motion.div
-        animate={{
-          x: mousePos.x / 15,
-          y: mousePos.y / 15,
-        }}
-        transition={{ type: "spring", damping: 30, stiffness: 50 }}
+        style={{ x: springX, y: springY }}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] bg-white/5 rounded-full blur-[120px]"
       />
 

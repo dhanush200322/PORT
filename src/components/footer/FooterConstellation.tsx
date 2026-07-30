@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { useReducedMotion } from "framer-motion";
 
 interface Particle {
   id: number;
@@ -11,13 +11,22 @@ interface Particle {
   vy: number;
 }
 
+const PARTICLE_COUNT = 25;
+const CONNECTION_DISTANCE = 200;
+
 export default function FooterConstellation() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [particles, setParticles] = useState<Particle[]>([]);
-  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
   const requestRef = useRef<number | undefined>(undefined);
   const prefersReducedMotion = useReducedMotion();
   const [isVisible, setIsVisible] = useState(false);
+  
+  // Refs for direct DOM manipulation to avoid React re-renders
+  const particlesRef = useRef<Particle[]>([]);
+  const circlesRef = useRef<(SVGCircleElement | null)[]>([]);
+  const linesRef = useRef<(SVGLineElement | null)[]>([]);
+  
+  // Track mouse without triggering re-renders
+  const mousePosRef = useRef({ x: -1000, y: -1000 });
 
   // Intersection Observer to pause when out of view
   useEffect(() => {
@@ -31,58 +40,87 @@ export default function FooterConstellation() {
     return () => observer.disconnect();
   }, []);
 
-  // Initialize particles
+  // Initialize particles once
   useEffect(() => {
     if (typeof window === "undefined" || prefersReducedMotion) return;
     
-    const initParticles: Particle[] = Array.from({ length: 25 }).map((_, i) => ({
+    particlesRef.current = Array.from({ length: PARTICLE_COUNT }).map((_, i) => ({
       id: i,
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
       vx: (Math.random() - 0.5) * 0.5,
       vy: (Math.random() - 0.5) * 0.5,
     }));
-    setParticles(initParticles);
   }, [prefersReducedMotion]);
 
-  // Animation Loop
+  // Animation Loop - Direct DOM mutation
   useEffect(() => {
-    if (!isVisible || prefersReducedMotion || particles.length === 0) return;
+    if (!isVisible || prefersReducedMotion || particlesRef.current.length === 0) return;
 
     const animate = () => {
-      setParticles(prev => prev.map(p => {
-        let newX = p.x + p.vx;
-        let newY = p.y + p.vy;
+      if (!containerRef.current) return;
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      const mouse = mousePosRef.current;
 
-        if (containerRef.current) {
-          const { width, height } = containerRef.current.getBoundingClientRect();
-          if (newX < 0 || newX > width) p.vx *= -1;
-          if (newY < 0 || newY > height) p.vy *= -1;
+      particlesRef.current.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Bounce off edges
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        // Update Circle DOM
+        const circle = circlesRef.current[i];
+        if (circle) {
+          circle.setAttribute("cx", p.x.toString());
+          circle.setAttribute("cy", p.y.toString());
         }
 
-        return { ...p, x: newX, y: newY };
-      }));
+        // Update Line DOM
+        const line = linesRef.current[i];
+        if (line) {
+          const distToMouse = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+          if (distToMouse < CONNECTION_DISTANCE) {
+            const opacity = (1 - distToMouse / CONNECTION_DISTANCE) * 0.3;
+            line.setAttribute("x1", p.x.toString());
+            line.setAttribute("y1", p.y.toString());
+            line.setAttribute("x2", mouse.x.toString());
+            line.setAttribute("y2", mouse.y.toString());
+            line.setAttribute("stroke", `rgba(255,255,255,${opacity})`);
+            line.style.display = "block";
+          } else {
+            line.style.display = "none";
+          }
+        }
+      });
+
       requestRef.current = requestAnimationFrame(animate);
     };
 
     requestRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(requestRef.current!);
-  }, [isVisible, prefersReducedMotion, particles.length]);
+    return () => {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    };
+  }, [isVisible, prefersReducedMotion]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    setMousePos({
+    mousePosRef.current = {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top
-    });
+    };
   };
 
   const handleMouseLeave = () => {
-    setMousePos({ x: -1000, y: -1000 });
+    mousePosRef.current = { x: -1000, y: -1000 };
   };
 
   if (prefersReducedMotion) return null;
+
+  // We map over a static array just to create the initial SVG elements
+  const renderArray = Array.from({ length: PARTICLE_COUNT });
 
   return (
     <div 
@@ -92,28 +130,20 @@ export default function FooterConstellation() {
       onMouseLeave={handleMouseLeave}
     >
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
-        {particles.map((p1, i) => {
-          // Draw lines to mouse if close (only closest 3-5 is the goal, but simple distance check is very fast)
-          const distToMouse = Math.hypot(p1.x - mousePos.x, p1.y - mousePos.y);
-          const mouseLineOpacity = distToMouse < 200 ? (1 - distToMouse / 200) * 0.3 : 0;
-
-          return (
-            <g key={`group-${p1.id}`}>
-              {/* Particle Dot */}
-              <circle cx={p1.x} cy={p1.y} r={1.5} fill="rgba(255,255,255,0.4)" />
-              
-              {/* Line to Mouse */}
-              {mouseLineOpacity > 0 && (
-                <line 
-                  x1={p1.x} y1={p1.y} 
-                  x2={mousePos.x} y2={mousePos.y} 
-                  stroke={`rgba(255,255,255,${mouseLineOpacity})`} 
-                  strokeWidth="1"
-                />
-              )}
-            </g>
-          );
-        })}
+        {renderArray.map((_, i) => (
+          <g key={`particle-group-${i}`}>
+            <circle 
+              ref={(el) => { circlesRef.current[i] = el; }}
+              r={1.5} 
+              fill="rgba(255,255,255,0.4)" 
+            />
+            <line 
+              ref={(el) => { linesRef.current[i] = el; }}
+              strokeWidth="1"
+              style={{ display: "none" }}
+            />
+          </g>
+        ))}
       </svg>
     </div>
   );

@@ -24,7 +24,7 @@ function StatItem({ finalValue, label, suffix = "" }: StatItemProps) {
   }, [isInView, finalValue, springValue]);
 
   useEffect(() => {
-    return springValue.onChange((latest) => {
+    return springValue.on("change", (latest) => {
       setDisplayValue(Math.floor(latest));
     });
   }, [springValue]);

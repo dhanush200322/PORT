@@ -47,7 +47,7 @@ export default function CareerJourney() {
   const [activeStage, setActiveStage] = useState(0);
 
   useEffect(() => {
-    return smoothProgress.onChange((v) => {
+    return smoothProgress.on("change", (v) => {
       setActiveStage(getStageIndex(v));
     });
   }, [smoothProgress]);

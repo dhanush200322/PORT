@@ -87,6 +87,7 @@ export default function ProjectCard({ project, onOpenCaseStudy }: ProjectCardPro
             src={project.imageFallback}
             alt={project.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className={`object-cover transition-all duration-700 ease-out ${isHovered && !project.videoPreview ? "opacity-100 scale-[1.03]" : "opacity-50 scale-100"}`}
           />
         )}
