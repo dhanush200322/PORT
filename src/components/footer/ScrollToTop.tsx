@@ -5,7 +5,7 @@ import { ArrowUp } from "lucide-react";
 import { useState } from "react";
 
 interface ScrollToTopProps {
-  onExit: () => void;
+  onExit: (exiting: boolean) => void;
 }
 
 export default function ScrollToTop({ onExit }: ScrollToTopProps) {
@@ -24,7 +24,7 @@ export default function ScrollToTop({ onExit }: ScrollToTopProps) {
     setIsClicked(true);
     
     // Trigger the parent exit animation sequence
-    onExit();
+    onExit(true);
 
     // After a delay to allow the footer to collapse visually, scroll to top
     setTimeout(() => {
@@ -33,6 +33,7 @@ export default function ScrollToTop({ onExit }: ScrollToTopProps) {
       // Reset state after scrolling finishes
       setTimeout(() => {
         setIsClicked(false);
+        onExit(false); // Reset footer visibility so it shows when scrolling down again
       }, 1000);
     }, 600); // 600ms delay to let particles dissolve and spotlight collapse
   };

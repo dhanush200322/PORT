@@ -27,7 +27,7 @@ export default function Footer() {
       </div>
 
       <FooterColumns />
-      <ScrollToTop onExit={() => setIsExiting(true)} />
+      <ScrollToTop onExit={(exiting) => setIsExiting(exiting)} />
     </motion.footer>
   );
 }
