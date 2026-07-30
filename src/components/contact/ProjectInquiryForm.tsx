@@ -49,23 +49,32 @@ export default function ProjectInquiryForm({ onSuccess }: { onSuccess?: () => vo
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
-      const validFiles = selectedFiles.filter(file => file.size <= 25 * 1024 * 1024); // Increased to 25MB for videos
       
-      if (validFiles.length !== selectedFiles.length) {
-        setError("Some files were skipped. Maximum file size is 25MB.");
+      // Calculate total size including existing files
+      const currentTotalSize = files.reduce((acc, f) => acc + f.size, 0);
+      const newFilesSize = selectedFiles.reduce((acc, f) => acc + f.size, 0);
+      
+      // Vercel Serverless Functions have a strict 4.5MB request body limit
+      const MAX_TOTAL_SIZE = 4.5 * 1024 * 1024; // 4.5MB
+
+      if (currentTotalSize + newFilesSize > MAX_TOTAL_SIZE) {
+        setError(`Total file size cannot exceed 4.5MB (Vercel limit). Please select smaller files.`);
+        return;
       }
       
-      if (files.length + validFiles.length > 5) { // Increased to 5 files
+      if (files.length + selectedFiles.length > 5) {
         setError("Maximum 5 files allowed.");
         return;
       }
       
-      setFiles(prev => [...prev, ...validFiles]);
+      setError(null); // Clear errors if valid
+      setFiles(prev => [...prev, ...selectedFiles]);
     }
   };
 
   const removeFile = (index: number) => {
     setFiles(prev => prev.filter((_, i) => i !== index));
+    setError(null); // Clear errors in case they removed a file to get under the limit
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -93,7 +102,16 @@ export default function ProjectInquiryForm({ onSuccess }: { onSuccess?: () => vo
         body: form,
       });
 
-      const data = await response.json();
+      if (response.status === 413) {
+        throw new Error("Files are too large. Vercel restricts uploads to 4.5MB total.");
+      }
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (err) {
+        throw new Error(`Server returned an unexpected error (${response.status}). Please try again later.`);
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to send message");
