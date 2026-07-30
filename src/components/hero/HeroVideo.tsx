@@ -8,8 +8,8 @@ export default function HeroVideo() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   
-  // Force sound on by default as explicitly requested by user
-  const [isMuted, setIsMuted] = useState(false);
+  // The video MUST be muted by default in order to autoplay on modern browsers.
+  const [isMuted, setIsMuted] = useState(true);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
