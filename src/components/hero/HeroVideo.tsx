@@ -17,16 +17,40 @@ export default function HeroVideo() {
   });
 
   useEffect(() => {
-    // Unmute the video by default on all views (laptop and mobile)
-    setIsMuted(false);
-    if (videoRef.current) {
-      videoRef.current.muted = false;
-      
-      // Attempt to play since browsers might block unmuted autoplay
-      videoRef.current.play().catch(e => {
-        console.log("Browser blocked unmuted autoplay:", e);
-      });
-    }
+    const video = videoRef.current;
+    if (!video) return;
+
+    const attemptPlay = async () => {
+      try {
+        // Try to play unmuted first
+        video.muted = false;
+        setIsMuted(false);
+        await video.play();
+      } catch (error) {
+        console.log("Browser blocked unmuted autoplay, falling back to muted:", error);
+        // Fallback: Play muted so video plays automatically
+        video.muted = true;
+        setIsMuted(true);
+        video.play().catch(e => console.log("Muted autoplay also failed:", e));
+        
+        // Add a one-time interaction listener to unmute as soon as they interact
+        const enableSoundOnInteract = () => {
+          if (videoRef.current) {
+            videoRef.current.muted = false;
+            setIsMuted(false);
+          }
+          document.removeEventListener('click', enableSoundOnInteract);
+          document.removeEventListener('touchstart', enableSoundOnInteract);
+          document.removeEventListener('keydown', enableSoundOnInteract);
+        };
+        
+        document.addEventListener('click', enableSoundOnInteract);
+        document.addEventListener('touchstart', enableSoundOnInteract);
+        document.addEventListener('keydown', enableSoundOnInteract);
+      }
+    };
+
+    attemptPlay();
   }, []);
 
   // Smooth parallax effect on scroll
