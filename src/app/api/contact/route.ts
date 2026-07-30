@@ -14,28 +14,30 @@ const transporter = nodemailer.createTransport({
 
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData();
+    const body = await req.json();
     
-    const fullName = formData.get("fullName") as string;
-    const email = formData.get("email") as string;
-    const phone = formData.get("phone") as string;
-    const whatsapp = formData.get("whatsapp") as string;
-    const subject = formData.get("subject") as string;
-    const purpose = formData.get("purpose") as string;
-    const message = formData.get("message") as string;
-
-    const files = formData.getAll("attachments") as File[];
+    const { 
+      fullName, 
+      email, 
+      phone, 
+      whatsapp, 
+      subject, 
+      purpose, 
+      message, 
+      attachments: reqAttachments 
+    } = body;
     
-    // Parse files into Nodemailer attachment format
-    const attachments = await Promise.all(
-      files.map(async (file) => {
-        const buffer = Buffer.from(await file.arrayBuffer());
-        return {
-          filename: file.name,
-          content: buffer,
-        };
-      })
-    );
+    // Parse base64 files into Nodemailer attachment format
+    const attachments = reqAttachments?.map((file: any) => {
+      // file.data looks like "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ..."
+      const base64Data = file.data.split("base64,")[1];
+      
+      return {
+        filename: file.name,
+        content: base64Data,
+        encoding: 'base64'
+      };
+    }) || [];
 
     const mailOptions = {
       from: `"Portfolio Inquiry" <${EMAIL}>`,

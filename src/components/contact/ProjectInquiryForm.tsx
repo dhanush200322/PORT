@@ -54,11 +54,11 @@ export default function ProjectInquiryForm({ onSuccess }: { onSuccess?: () => vo
       const currentTotalSize = files.reduce((acc, f) => acc + f.size, 0);
       const newFilesSize = selectedFiles.reduce((acc, f) => acc + f.size, 0);
       
-      // Vercel Serverless Functions have a strict 4.5MB request body limit
-      const MAX_TOTAL_SIZE = 4.5 * 1024 * 1024; // 4.5MB
+      // Because we use Base64 encoding (adds ~33% overhead) and Vercel has a 4.5MB limit
+      const MAX_TOTAL_SIZE = 3 * 1024 * 1024; // 3MB raw size max
 
       if (currentTotalSize + newFilesSize > MAX_TOTAL_SIZE) {
-        setError(`Total file size cannot exceed 4.5MB (Vercel limit). Please select smaller files.`);
+        setError(`Total file size cannot exceed 3MB. Please select smaller files.`);
         return;
       }
       
@@ -84,22 +84,34 @@ export default function ProjectInquiryForm({ onSuccess }: { onSuccess?: () => vo
     setIsUploading(true);
 
     try {
-      const form = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        if (key === 'whatsapp' && whatsappSameAsPhone) {
-          form.append(key, formData.phone);
-        } else {
-          form.append(key, value);
-        }
+      // Convert files to Base64 to avoid mobile browser FormData streaming bugs
+      const toBase64 = (file: File) => new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = error => reject(error);
       });
-      
-      files.forEach((file) => {
-        form.append("attachments", file);
-      });
+
+      const base64Attachments = await Promise.all(
+        files.map(async (file) => ({
+          name: file.name,
+          type: file.type,
+          data: await toBase64(file),
+        }))
+      );
+
+      const payload = {
+        ...formData,
+        whatsapp: whatsappSameAsPhone ? formData.phone : formData.whatsapp,
+        attachments: base64Attachments,
+      };
 
       const response = await fetch(`${window.location.origin}/api/contact`, {
         method: "POST",
-        body: form,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
 
       if (response.status === 413) {
