@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { useRef, useState, useEffect, useCallback } from "react";
-import { Volume2, VolumeX } from "lucide-react";
+import { Volume2, VolumeX, ArrowDown } from "lucide-react";
 
 export default function HeroVideo() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -208,19 +208,23 @@ export default function HeroVideo() {
       {/* Sound Toggle Button */}
       <div className="absolute bottom-6 right-6 lg:bottom-8 lg:right-8 z-50 pointer-events-auto flex flex-col items-end">
         
-        {/* Animated Tooltip to draw attention */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: [0, -5, 0] }}
-          transition={{ 
-            opacity: { delay: 1.5, duration: 0.5 },
-            y: { repeat: Infinity, duration: 1.5, ease: "easeInOut" } 
-          }}
-          className="relative mb-3 bg-primary text-white text-xs font-medium px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-lg whitespace-nowrap pointer-events-none opacity-80"
-        >
-          <div className="absolute -bottom-1.5 right-6 w-3 h-3 bg-primary rotate-45" />
-          Click to hear voice! 👋
-        </motion.div>
+        {/* Animated Tooltip & Arrow to draw attention (Highly visible on mobile) */}
+        {isMuted && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: [0, 15, 0] }}
+            transition={{ 
+              opacity: { delay: 1.0, duration: 0.5 },
+              y: { repeat: Infinity, duration: 1.5, ease: "easeInOut" } 
+            }}
+            className="flex flex-col items-center mb-3 sm:mb-4 pointer-events-none mr-2 sm:mr-4"
+          >
+            <div className="bg-primary/90 backdrop-blur-sm text-white text-sm sm:text-base font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-full shadow-[0_0_20px_rgba(var(--primary),0.6)] whitespace-nowrap border border-white/30 tracking-wide">
+              SOUND ON 🔊
+            </div>
+            <ArrowDown className="w-8 h-8 sm:w-10 sm:h-10 text-primary mt-2 drop-shadow-[0_0_15px_rgba(var(--primary),0.8)]" />
+          </motion.div>
+        )}
 
         <button
           onClick={toggleMute}

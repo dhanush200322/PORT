@@ -97,7 +97,7 @@ export default function ProjectInquiryForm({ onSuccess }: { onSuccess?: () => vo
         form.append("attachments", file);
       });
 
-      const response = await fetch("/api/contact", {
+      const response = await fetch(`${window.location.origin}/api/contact`, {
         method: "POST",
         body: form,
       });
