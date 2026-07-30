@@ -70,7 +70,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-[#0A0A0A] border border-white/10 rounded-3xl shadow-2xl pointer-events-auto custom-scrollbar relative"
+              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-[#0A0A0A] border border-white/10 rounded-3xl shadow-2xl pointer-events-auto custom-scrollbar relative pb-[env(safe-area-inset-bottom)]"
             >
               
               {/* Close Button */}
@@ -97,7 +97,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                      className="object-cover opacity-80"
                    />
                  )}
-                 <h2 className="text-4xl md:text-5xl font-bold text-white z-20 tracking-tighter">{project.title}</h2>
+                 <h2 className="text-[var(--text-h2)] font-bold text-white z-20 tracking-tighter">{project.title}</h2>
               </div>
 
               {/* Content */}
@@ -111,7 +111,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                     </span>
                     <span className="text-sm text-gray-custom">{project.meta.year}</span>
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">{project.title}</h2>
+                  <h2 className="text-[var(--text-h2)] font-bold text-white mb-2 tracking-tight">{project.title}</h2>
                   <p className="text-lg text-primary font-medium">{project.category}</p>
                 </div>
 

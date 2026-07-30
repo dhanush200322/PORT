@@ -6,7 +6,7 @@ import * as LucideIcons from "lucide-react";
 
 export default function WhyChooseMe() {
   return (
-    <div className="relative w-full max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
+    <div className="relative w-full container-xl py-24 border-t border-white/5">
       
       <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-20 gap-8">
         <motion.div
@@ -15,7 +15,7 @@ export default function WhyChooseMe() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
-          <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">
+          <h3 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-4">
             Why Choose Me?
           </h3>
           <p className="text-white/50 text-lg max-w-lg">

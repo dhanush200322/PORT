@@ -126,7 +126,7 @@ export default function ContactSuccess({ onReset }: ContactSuccessProps) {
             initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ delay: 0.2 + idx * 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-3xl md:text-5xl font-bold text-white tracking-tight"
+            className="text-[var(--text-h2)] font-bold text-white tracking-tight"
           >
             {word}
           </motion.span>
@@ -138,7 +138,7 @@ export default function ContactSuccess({ onReset }: ContactSuccessProps) {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" }}
-        className="text-lg md:text-xl text-white/60 max-w-md mx-auto mb-12 z-10 leading-relaxed font-light"
+        className="text-[var(--text-body)] text-white/60 max-w-md mx-auto mb-12 z-10 leading-relaxed font-light"
       >
         Your inquiry has been secured. I'll review your details and be in touch shortly.
       </motion.p>

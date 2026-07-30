@@ -5,7 +5,7 @@ import { CheckCircle2, Download } from "lucide-react";
 
 export default function ServicesCTA() {
   return (
-    <div className="relative w-full max-w-5xl mx-auto px-6 pb-40">
+    <div className="relative w-full container-md pb-40">
       
       {/* Tiny Strip above CTA */}
       <motion.div
@@ -39,10 +39,10 @@ export default function ServicesCTA() {
         <div className="absolute inset-0 rounded-[2.5rem] border border-white/5 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-0" />
 
         <div className="relative z-10 flex flex-col items-center">
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-6 max-w-3xl leading-[1.1]">
+          <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-6 max-w-3xl leading-[1.1]">
             Let's Build Something Exceptional Together
           </h2>
-          <p className="text-lg md:text-xl text-white/60 mb-8 max-w-2xl font-light leading-relaxed">
+          <p className="text-[var(--text-body)] text-white/60 mb-8 max-w-2xl font-light leading-relaxed">
             Whether you're launching a startup, automating a business, or building your next digital product, I'm ready to turn your ideas into reality.
           </p>
 

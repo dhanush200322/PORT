@@ -69,7 +69,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1, ease: "easeOut" }}
-          className="text-white/40 text-lg md:text-xl font-light italic leading-relaxed"
+          className="text-white/40 text-[var(--text-body)] font-light italic leading-relaxed"
         >
           "Thank you for exploring my journey.<br/>Let's create something meaningful together."
         </motion.p>

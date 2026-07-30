@@ -47,7 +47,7 @@ const AnimatedCounter = ({ value, suffix }: { value: number; suffix: string }) =
   const displayValue = useTransform(spring, (current) => Math.round(current));
 
   return (
-    <span ref={ref} className="text-4xl md:text-5xl font-bold tracking-tighter text-white flex items-center justify-center">
+    <span ref={ref} className="text-[var(--text-h2)] font-bold tracking-tighter text-white flex items-center justify-center">
       <motion.span>{displayValue}</motion.span>
       {suffix && <span>{suffix}</span>}
     </span>

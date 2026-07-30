@@ -11,7 +11,6 @@ interface Particle {
   vy: number;
 }
 
-const PARTICLE_COUNT = 25;
 const CONNECTION_DISTANCE = 200;
 
 export default function FooterConstellation() {
@@ -19,6 +18,7 @@ export default function FooterConstellation() {
   const requestRef = useRef<number | undefined>(undefined);
   const prefersReducedMotion = useReducedMotion();
   const [isVisible, setIsVisible] = useState(false);
+  const [particleCount, setParticleCount] = useState(0);
   
   // Refs for direct DOM manipulation to avoid React re-renders
   const particlesRef = useRef<Particle[]>([]);
@@ -44,7 +44,15 @@ export default function FooterConstellation() {
   useEffect(() => {
     if (typeof window === "undefined" || prefersReducedMotion) return;
     
-    particlesRef.current = Array.from({ length: PARTICLE_COUNT }).map((_, i) => ({
+    // Determine motion level based on screen width
+    const width = window.innerWidth;
+    let count = 8; // Mobile
+    if (width > 1024) count = 30; // Desktop
+    else if (width > 768) count = 18; // Tablet
+    
+    setParticleCount(count);
+
+    particlesRef.current = Array.from({ length: count }).map((_, i) => ({
       id: i,
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
@@ -120,7 +128,7 @@ export default function FooterConstellation() {
   if (prefersReducedMotion) return null;
 
   // We map over a static array just to create the initial SVG elements
-  const renderArray = Array.from({ length: PARTICLE_COUNT });
+  const renderArray = Array.from({ length: particleCount });
 
   return (
     <div 

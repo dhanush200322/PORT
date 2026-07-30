@@ -31,14 +31,38 @@ export default function HeroContent() {
       </motion.p>
 
       {/* Name Title */}
-      <div className="overflow-hidden mb-6">
+      <div className="overflow-hidden mb-6 flex justify-center">
         <motion.h1
-          initial={{ y: "100%" }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="text-5xl sm:text-6xl md:text-8xl font-bold tracking-tighter text-white"
+          className="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-bold tracking-tight text-white flex items-center justify-center"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 1 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.08,
+                delayChildren: 0.1,
+              },
+            },
+          }}
         >
-          DHANUSH AV
+          {"DHANUSH AV".split("").map((char, index) => (
+            <motion.span
+              key={index}
+              variants={{
+                hidden: { y: "100%", opacity: 0 },
+                visible: { 
+                  y: 0, 
+                  opacity: 1,
+                  transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] }
+                },
+              }}
+              className={char === " " ? "w-4 md:w-8" : "inline-block"}
+            >
+              {char}
+            </motion.span>
+          ))}
         </motion.h1>
       </div>
 
@@ -49,13 +73,13 @@ export default function HeroContent() {
         transition={{ duration: 1, delay: 0.4 }}
         className="flex flex-col items-center max-w-2xl"
       >
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-white/90 mb-4 tracking-tight flex flex-col sm:flex-row items-center gap-2">
+        <h2 className="text-[var(--text-h3)] font-medium text-white/90 mb-4 tracking-tight flex flex-col sm:flex-row items-center gap-2">
           <span>Full Stack Developer</span>
           <span className="hidden sm:inline text-primary">&</span>
           <span className="sm:hidden text-primary">&</span>
           <span>AI Automation Engineer</span>
         </h2>
-        <p className="text-base sm:text-lg text-gray-custom leading-relaxed font-light">
+        <p className="text-[var(--text-body)] text-gray-custom leading-relaxed font-light">
           Building Scalable Web Applications & AI Solutions.
         </p>
       </motion.div>

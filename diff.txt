@@ -1,0 +1,1409 @@
+﻿diff --git a/src/app/globals.css b/src/app/globals.css
+index 39ec1d8..8c15858 100644
+--- a/src/app/globals.css
++++ b/src/app/globals.css
+@@ -8,6 +8,27 @@
+   --color-gray-custom: #94A3B8;
+ 
+   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
++
++  /* Typography Tokens */
++  --text-display: clamp(3rem, 6vw + 1rem, 6rem);
++  --text-h1: clamp(2.25rem, 5vw + 1rem, 4.5rem);
++  --text-h2: clamp(1.75rem, 4vw + 1rem, 3.5rem);
++  --text-h3: clamp(1.25rem, 3vw + 1rem, 2.25rem);
++  --text-body: clamp(1rem, 1vw + 0.5rem, 1.125rem);
++  --text-caption: clamp(0.875rem, 0.5vw + 0.5rem, 1rem);
++
++  /* Spacing Tokens */
++  --spacing-section: clamp(4rem, 10vw, 10rem);
++  --spacing-gap: clamp(1rem, 2vw, 3rem);
++}
++
++@layer utilities {
++  .container-xs { width: 100%; max-width: 480px; margin-inline: auto; padding-inline: clamp(1rem, 5vw, 2rem); }
++  .container-sm { width: 100%; max-width: 640px; margin-inline: auto; padding-inline: clamp(1rem, 5vw, 2rem); }
++  .container-md { width: 100%; max-width: 768px; margin-inline: auto; padding-inline: clamp(1rem, 5vw, 2rem); }
++  .container-lg { width: 100%; max-width: 1024px; margin-inline: auto; padding-inline: clamp(1.5rem, 5vw, 4rem); }
++  .container-xl { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline: clamp(1.5rem, 5vw, 4rem); }
++  .container-2xl { width: 100%; max-width: 1536px; margin-inline: auto; padding-inline: clamp(1.5rem, 5vw, 4rem); }
+ }
+ 
+ :root {
+@@ -26,7 +47,6 @@ body {
+   background: var(--background);
+   color: var(--foreground);
+   font-family: var(--font-sans);
+-  overflow-x: hidden;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+ }
+diff --git a/src/components/about/About.tsx b/src/components/about/About.tsx
+index 1a1d141..e8bdd43 100644
+--- a/src/components/about/About.tsx
++++ b/src/components/about/About.tsx
+@@ -95,7 +95,7 @@ export default function About() {
+             About Me
+           </motion.span>
+           
+-          <h2 className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white">
++          <h2 className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-[var(--text-h1)] font-bold tracking-tighter text-white">
+             {words.map((word, i) => (
+               <motion.span key={i} variants={wordVariants} className="inline-block">
+                 {word}
+diff --git a/src/components/about/AboutContent.tsx b/src/components/about/AboutContent.tsx
+index cd42e37..a4b5159 100644
+--- a/src/components/about/AboutContent.tsx
++++ b/src/components/about/AboutContent.tsx
+@@ -59,10 +59,10 @@ export default function AboutContent() {
+       {/* Left Column: Introduction */}
+       <div className="flex-1 space-y-8">
+         <motion.div variants={itemVariants} className="space-y-2">
+-          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-white">
++          <h2 className="text-[var(--text-h2)] font-bold tracking-tighter text-white">
+             Hi, I'm Dhanush AV.
+           </h2>
+-          <p className="text-lg md:text-xl font-medium text-primary">
++          <p className="text-[var(--text-body)] font-medium text-primary">
+             Full Stack Developer & AI Automation Engineer
+           </p>
+         </motion.div>
+diff --git a/src/components/about/AboutStats.tsx b/src/components/about/AboutStats.tsx
+index 135ad6c..cef190d 100644
+--- a/src/components/about/AboutStats.tsx
++++ b/src/components/about/AboutStats.tsx
+@@ -47,7 +47,7 @@ const AnimatedCounter = ({ value, suffix }: { value: number; suffix: string }) =
+   const displayValue = useTransform(spring, (current) => Math.round(current));
+ 
+   return (
+-    <span ref={ref} className="text-4xl md:text-5xl font-bold tracking-tighter text-white flex items-center justify-center">
++    <span ref={ref} className="text-[var(--text-h2)] font-bold tracking-tighter text-white flex items-center justify-center">
+       <motion.span>{displayValue}</motion.span>
+       {suffix && <span>{suffix}</span>}
+     </span>
+diff --git a/src/components/academic/Academic.tsx b/src/components/academic/Academic.tsx
+index f794f25..6ea3f06 100644
+--- a/src/components/academic/Academic.tsx
++++ b/src/components/academic/Academic.tsx
+@@ -7,7 +7,7 @@ import { ArrowDown } from "lucide-react";
+ 
+ export default function Academic() {
+   return (
+-    <section id="academic" className="relative w-full bg-background min-h-screen">
++    <section id="academic" className="relative w-full bg-background min-h-screen overflow-clip">
+       
+       {/* 1. Header Section */}
+       <AcademicHeader />
+@@ -26,7 +26,7 @@ export default function Academic() {
+           transition={{ duration: 0.8 }}
+           className="max-w-3xl text-center mb-20"
+         >
+-          <p className="text-2xl md:text-3xl lg:text-4xl font-light text-white/80 leading-relaxed italic">
++          <p className="text-[var(--text-h3)] font-light text-white/80 leading-relaxed italic">
+             "Every lesson learned became another building block toward becoming the developer I am today."
+           </p>
+         </motion.div>
+@@ -51,7 +51,7 @@ export default function Academic() {
+           <span className="text-sm font-medium uppercase tracking-[0.2em] text-primary mb-6">
+             NEXT
+           </span>
+-          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-8">
++          <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-8">
+             Certifications & Achievements
+           </h2>
+           
+diff --git a/src/components/academic/AcademicChapter.tsx b/src/components/academic/AcademicChapter.tsx
+index 7bddbd9..6906b57 100644
+--- a/src/components/academic/AcademicChapter.tsx
++++ b/src/components/academic/AcademicChapter.tsx
+@@ -50,7 +50,7 @@ export default function AcademicChapter({ chapter }: AcademicChapterProps) {
+             <span className="inline-block px-3 py-1 mb-4 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-widest">
+               {chapter.qualification}
+             </span>
+-            <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-2">
++            <h3 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-2">
+               {chapter.title}
+             </h3>
+             <p className="text-white/60 font-medium">{chapter.school}</p>
+diff --git a/src/components/academic/AcademicHeader.tsx b/src/components/academic/AcademicHeader.tsx
+index 5ca52d8..c527cac 100644
+--- a/src/components/academic/AcademicHeader.tsx
++++ b/src/components/academic/AcademicHeader.tsx
+@@ -46,7 +46,7 @@ export default function AcademicHeader() {
+         initial="hidden"
+         whileInView="visible"
+         viewport={{ once: true, margin: "-100px" }}
+-        className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1]"
++        className="text-[var(--text-h1)] font-bold tracking-tight text-white mb-6 leading-[1.1]"
+       >
+         {words.map((word, idx) => (
+           <motion.span
+@@ -65,7 +65,7 @@ export default function AcademicHeader() {
+         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+         viewport={{ once: true, margin: "-100px" }}
+         transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+-        className="text-lg md:text-xl text-white/60 font-light leading-relaxed max-w-2xl"
++        className="text-[var(--text-body)] text-white/60 font-light leading-relaxed max-w-2xl"
+       >
+         Every classroom, every lesson, and every challenge shaped the foundation that eventually became my career in software engineering and AI.
+       </motion.p>
+diff --git a/src/components/academic/AcademicStorybook.tsx b/src/components/academic/AcademicStorybook.tsx
+index 33154cb..c8b4697 100644
+--- a/src/components/academic/AcademicStorybook.tsx
++++ b/src/components/academic/AcademicStorybook.tsx
+@@ -243,7 +243,7 @@ export default function AcademicStorybook() {
+            <span className="px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-widest mb-6">
+               2025
+            </span>
+-           <h3 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4 text-center">
++           <h3 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-4 text-center">
+              Graduation
+            </h3>
+            <p className="text-xl text-primary font-medium text-center">
+diff --git a/src/components/certificates/AchievementStats.tsx b/src/components/certificates/AchievementStats.tsx
+index 9a85613..891bc96 100644
+--- a/src/components/certificates/AchievementStats.tsx
++++ b/src/components/certificates/AchievementStats.tsx
+@@ -31,7 +31,7 @@ function StatItem({ finalValue, label, suffix = "" }: StatItemProps) {
+ 
+   return (
+     <div ref={ref} className="flex flex-col items-center justify-center p-6 text-center">
+-      <div className="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tight flex items-baseline">
++      <div className="text-[var(--text-h2)] font-bold text-white mb-2 tracking-tight flex items-baseline">
+         {displayValue}
+         <span className="text-primary ml-1">{suffix}</span>
+       </div>
+@@ -44,7 +44,7 @@ function StatItem({ finalValue, label, suffix = "" }: StatItemProps) {
+ 
+ export default function AchievementStats() {
+   return (
+-    <div className="w-full max-w-5xl mx-auto px-6 py-20 relative z-20">
++    <div className="w-full container-md py-20 relative z-20">
+       
+       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent blur-3xl opacity-50" />
+ 
+diff --git a/src/components/certificates/CertificateCard.tsx b/src/components/certificates/CertificateCard.tsx
+index 3856459..1234cbe 100644
+--- a/src/components/certificates/CertificateCard.tsx
++++ b/src/components/certificates/CertificateCard.tsx
+@@ -82,7 +82,7 @@ export default function CertificateCard({ certificate, onClick }: CertificateCar
+ 
+         {/* Main Title */}
+         <div className="mt-auto">
+-          <h3 className={`${certificate.isFeatured ? 'text-4xl md:text-5xl lg:text-6xl' : 'text-2xl md:text-3xl'} font-bold text-white tracking-tight leading-[1.1] mb-8 group-hover:text-primary transition-colors duration-500`}>
++          <h3 className={`${certificate.isFeatured ? 'text-[var(--text-h1)]' : 'text-[var(--text-h3)]'} font-bold text-white tracking-tight leading-[1.1] mb-8 group-hover:text-primary transition-colors duration-500`}>
+             {certificate.title}
+           </h3>
+ 
+diff --git a/src/components/certificates/CertificateGallery.tsx b/src/components/certificates/CertificateGallery.tsx
+index a3aa2e4..4148cb6 100644
+--- a/src/components/certificates/CertificateGallery.tsx
++++ b/src/components/certificates/CertificateGallery.tsx
+@@ -29,7 +29,7 @@ export default function CertificateGallery() {
+   };
+ 
+   return (
+-    <div className="relative w-full max-w-7xl mx-auto px-6 py-20 min-h-screen">
++    <div className="relative w-full container-xl py-20 min-h-screen">
+       
+       {/* Subtle Moving Spotlight Background */}
+       <motion.div
+diff --git a/src/components/certificates/CertificateModal.tsx b/src/components/certificates/CertificateModal.tsx
+index f686fcb..f95ad1a 100644
+--- a/src/components/certificates/CertificateModal.tsx
++++ b/src/components/certificates/CertificateModal.tsx
+@@ -52,7 +52,7 @@ export default function CertificateModal({ certificate, onClose }: CertificateMo
+             animate={{ opacity: 1, scale: 1, y: 0 }}
+             exit={{ opacity: 0, scale: 0.95, y: 20 }}
+             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+-            className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-background/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden"
++            className="relative w-full max-w-5xl max-h-[90dvh] overflow-y-auto bg-background/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] pb-[env(safe-area-inset-bottom)] flex flex-col md:flex-row overflow-hidden"
+             onClick={(e) => e.stopPropagation()}
+           >
+             {/* Close Button */}
+@@ -92,7 +92,7 @@ export default function CertificateModal({ certificate, onClose }: CertificateMo
+                      Completed
+                    </span>
+                  </div>
+-                 <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-2">
++                 <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-2">
+                    {certificate.title}
+                  </h2>
+                </div>
+diff --git a/src/components/certificates/Certificates.tsx b/src/components/certificates/Certificates.tsx
+index 25d6613..37426a5 100644
+--- a/src/components/certificates/Certificates.tsx
++++ b/src/components/certificates/Certificates.tsx
+@@ -61,7 +61,7 @@ export default function Certificates() {
+           <span className="text-sm font-medium uppercase tracking-[0.2em] text-primary mb-6">
+             What I Can Build
+           </span>
+-          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-8">
++          <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-8">
+             Services
+           </h2>
+           
+diff --git a/src/components/certificates/CertificatesHeader.tsx b/src/components/certificates/CertificatesHeader.tsx
+index d50741f..871cc8c 100644
+--- a/src/components/certificates/CertificatesHeader.tsx
++++ b/src/components/certificates/CertificatesHeader.tsx
+@@ -46,7 +46,7 @@ export default function CertificatesHeader() {
+         initial="hidden"
+         whileInView="visible"
+         viewport={{ once: true, margin: "-100px" }}
+-        className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1]"
++        className="text-[var(--text-h1)] font-bold tracking-tight text-white mb-6 leading-[1.1]"
+       >
+         {words.map((word, idx) => (
+           <motion.span
+@@ -65,7 +65,7 @@ export default function CertificatesHeader() {
+         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+         viewport={{ once: true, margin: "-100px" }}
+         transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+-        className="text-lg md:text-xl text-white/60 font-light leading-relaxed max-w-2xl"
++        className="text-[var(--text-body)] text-white/60 font-light leading-relaxed max-w-2xl"
+       >
+         Every certification represents another step in my continuous journey of mastering modern technologies, software engineering, and AI-powered solutions.
+       </motion.p>
+diff --git a/src/components/certificates/TechStackWall.tsx b/src/components/certificates/TechStackWall.tsx
+index 29b16fa..456bc11 100644
+--- a/src/components/certificates/TechStackWall.tsx
++++ b/src/components/certificates/TechStackWall.tsx
+@@ -10,13 +10,13 @@ const TECH_STACK = [
+ 
+ export default function TechStackWall() {
+   return (
+-    <div className="w-full max-w-7xl mx-auto px-6 py-32 relative z-10 border-t border-white/5 bg-gradient-to-b from-transparent to-black/20">
++    <div className="w-full container-xl py-32 relative z-10 border-t border-white/5 bg-gradient-to-b from-transparent to-black/20">
+       
+       <div className="text-center mb-16">
+         <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-primary mb-4 block">
+           Technical Arsenal
+         </span>
+-        <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
++        <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight">
+           Tools of the Trade
+         </h2>
+       </div>
+diff --git a/src/components/contact/Contact.tsx b/src/components/contact/Contact.tsx
+index a51da44..ba5aa38 100644
+--- a/src/components/contact/Contact.tsx
++++ b/src/components/contact/Contact.tsx
+@@ -69,7 +69,7 @@ export default function Contact() {
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true }}
+           transition={{ duration: 1, ease: "easeOut" }}
+-          className="text-white/40 text-lg md:text-xl font-light italic leading-relaxed"
++          className="text-white/40 text-[var(--text-body)] font-light italic leading-relaxed"
+         >
+           "Thank you for exploring my journey.<br/>Let's create something meaningful together."
+         </motion.p>
+diff --git a/src/components/contact/ContactHeader.tsx b/src/components/contact/ContactHeader.tsx
+index b7abc56..41e77e7 100644
+--- a/src/components/contact/ContactHeader.tsx
++++ b/src/components/contact/ContactHeader.tsx
+@@ -21,7 +21,7 @@ export default function ContactHeader() {
+       </motion.div>
+ 
+       {/* Heading (Word by Word reveal) */}
+-      <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-6 flex flex-wrap gap-x-3 gap-y-2">
++      <h2 className="text-[var(--text-h1)] font-bold text-white tracking-tight leading-[1.1] mb-6 flex flex-wrap gap-x-3 gap-y-2">
+         {words.map((word, i) => (
+           <motion.span
+             key={i}
+@@ -49,7 +49,7 @@ export default function ContactHeader() {
+           delay: 0.1 + (words.length * 0.08) + 0.2, // Play after heading
+           ease: "easeOut"
+         }}
+-        className="text-lg md:text-xl font-light text-white/60 leading-relaxed"
++        className="text-[var(--text-body)] font-light text-white/60 leading-relaxed"
+       >
+         Whether you're hiring a Full Stack Developer, looking for AI Automation, or planning your next digital product, I'd love to hear about your ideas.
+       </motion.p>
+diff --git a/src/components/contact/ContactSuccess.tsx b/src/components/contact/ContactSuccess.tsx
+index 485b1d5..672a40c 100644
+--- a/src/components/contact/ContactSuccess.tsx
++++ b/src/components/contact/ContactSuccess.tsx
+@@ -126,7 +126,7 @@ export default function ContactSuccess({ onReset }: ContactSuccessProps) {
+             initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+             transition={{ delay: 0.2 + idx * 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+-            className="text-3xl md:text-5xl font-bold text-white tracking-tight"
++            className="text-[var(--text-h2)] font-bold text-white tracking-tight"
+           >
+             {word}
+           </motion.span>
+@@ -138,7 +138,7 @@ export default function ContactSuccess({ onReset }: ContactSuccessProps) {
+         initial={{ opacity: 0, y: 15 }}
+         animate={{ opacity: 1, y: 0 }}
+         transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" }}
+-        className="text-lg md:text-xl text-white/60 max-w-md mx-auto mb-12 z-10 leading-relaxed font-light"
++        className="text-[var(--text-body)] text-white/60 max-w-md mx-auto mb-12 z-10 leading-relaxed font-light"
+       >
+         Your inquiry has been secured. I'll review your details and be in touch shortly.
+       </motion.p>
+diff --git a/src/components/contact/ProjectInquiryForm.tsx b/src/components/contact/ProjectInquiryForm.tsx
+index 9631600..828fcf3 100644
+--- a/src/components/contact/ProjectInquiryForm.tsx
++++ b/src/components/contact/ProjectInquiryForm.tsx
+@@ -1,373 +1,338 @@
+ "use client";
+ 
+-import { useState, useCallback } from "react";
+-import { motion, AnimatePresence } from "framer-motion";
+-import { useForm, Controller } from "react-hook-form";
+-import { zodResolver } from "@hookform/resolvers/zod";
+-import * as z from "zod";
++import { useState, useEffect } from "react";
++import { motion } from "framer-motion";
++import { Send, Upload, Loader2, Sparkles } from "lucide-react";
+ import PhoneInput from "react-phone-number-input";
+ import "react-phone-number-input/style.css";
+-import { useDropzone } from "react-dropzone";
+-import { INQUIRY_TYPES } from "./ContactData";
+-import { Loader2, Send, UploadCloud, X, CheckCircle2, FileText, Paperclip } from "lucide-react";
+-import * as LucideIcons from "lucide-react";
+ 
+-const MAX_FILES = 5;
+-
+-const formSchema = z.object({
+-  fullName: z.string().min(1, "Name is required."),
+-  email: z.string().email("Please enter a valid email address."),
+-  phone: z.string().min(1, "Phone number is required."),
+-  sameAsPhone: z.boolean(),
+-  whatsapp: z.string().optional(),
+-  subject: z.string().min(1, "Subject is required."),
+-  inquiryType: z.string().min(1, "Please select an inquiry type."),
+-  message: z.string().min(1, "Message is required.").max(5000, "Message is too long."),
+-}).refine(data => {
+-  if (!data.sameAsPhone && (!data.whatsapp || data.whatsapp.length < 1)) {
+-    return data.whatsapp === undefined || data.whatsapp === "" || data.whatsapp.length >= 1;
+-  }
+-  return true;
+-}, {
+-  message: "WhatsApp number is required if not same as phone.",
+-  path: ["whatsapp"],
+-});
++interface FormData {
++  fullName: string;
++  email: string;
++  phone: string;
++  whatsapp: string;
++  subject: string;
++  purpose: string;
++  message: string;
++}
+ 
+-type FormData = z.infer<typeof formSchema>;
++const PURPOSES = [
++  "Job Purpose",
++  "Consulting",
++  "Freelance Work",
++  "Internship",
++  "Full-Time Opportunity"
++];
+ 
+-interface ProjectInquiryFormProps {
+-  onSuccess: () => void;
+-}
++export default function ProjectInquiryForm({ onSuccess }: { onSuccess?: () => void }) {
++  const [formData, setFormData] = useState<FormData>({
++    fullName: "",
++    email: "",
++    phone: "",
++    whatsapp: "",
++    subject: "",
++    purpose: "",
++    message: "",
++  });
+ 
+-export default function ProjectInquiryForm({ onSuccess }: ProjectInquiryFormProps) {
++  const [whatsappSameAsPhone, setWhatsappSameAsPhone] = useState(false);
+   const [files, setFiles] = useState<File[]>([]);
+-  const [fileError, setFileError] = useState<string | null>(null);
+   const [isSubmitting, setIsSubmitting] = useState(false);
+-  const [serverError, setServerError] = useState<string | null>(null);
++  const [error, setError] = useState<string | null>(null);
++  const [isUploading, setIsUploading] = useState(false);
++  const [isMounted, setIsMounted] = useState(false);
+ 
+-  const { register, handleSubmit, control, watch, setValue, formState: { errors } } = useForm<FormData>({
+-    resolver: zodResolver(formSchema),
+-    defaultValues: {
+-      sameAsPhone: false,
+-    }
+-  });
+-
+-  const sameAsPhone = watch("sameAsPhone");
+-  const phoneVal = watch("phone");
++  useEffect(() => {
++    setIsMounted(true);
++  }, []);
+ 
+-  const onDrop = useCallback((acceptedFiles: File[]) => {
+-    setFileError(null);
+-    const newFiles = [...files, ...acceptedFiles];
+-    
+-    if (newFiles.length > MAX_FILES) {
+-      setFileError(`You can only upload a maximum of ${MAX_FILES} files.`);
+-      return;
++  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
++    if (e.target.files) {
++      const selectedFiles = Array.from(e.target.files);
++      const validFiles = selectedFiles.filter(file => file.size <= 25 * 1024 * 1024); // Increased to 25MB for videos
++      
++      if (validFiles.length !== selectedFiles.length) {
++        setError("Some files were skipped. Maximum file size is 25MB.");
++      }
++      
++      if (files.length + validFiles.length > 5) { // Increased to 5 files
++        setError("Maximum 5 files allowed.");
++        return;
++      }
++      
++      setFiles(prev => [...prev, ...validFiles]);
+     }
++  };
+ 
+-    setFiles(newFiles);
+-  }, [files]);
+-
+-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+-    onDrop
+-  });
+-
+-  const removeFile = (indexToRemove: number) => {
+-    setFiles(files.filter((_, i) => i !== indexToRemove));
+-    setFileError(null);
++  const removeFile = (index: number) => {
++    setFiles(prev => prev.filter((_, i) => i !== index));
+   };
+ 
+-  const onSubmit = async (data: FormData) => {
++  const handleSubmit = async (e: React.FormEvent) => {
++    e.preventDefault();
+     setIsSubmitting(true);
+-    setServerError(null);
++    setError(null);
++    setIsUploading(true);
+ 
+     try {
+-      const formData = new FormData();
+-      formData.append("fullName", data.fullName);
+-      formData.append("email", data.email);
+-      formData.append("phone", data.phone);
+-      formData.append("whatsapp", data.sameAsPhone ? data.phone : (data.whatsapp || ""));
+-      formData.append("subject", data.subject);
+-      formData.append("inquiryType", data.inquiryType);
+-      formData.append("message", data.message);
+-
++      const form = new FormData();
++      Object.entries(formData).forEach(([key, value]) => {
++        if (key === 'whatsapp' && whatsappSameAsPhone) {
++          form.append(key, formData.phone);
++        } else {
++          form.append(key, value);
++        }
++      });
++      
+       files.forEach((file) => {
+-        formData.append("files", file);
++        form.append("attachments", file);
+       });
+ 
+       const response = await fetch("/api/contact", {
+         method: "POST",
+-        body: formData,
++        body: form,
+       });
+ 
+-      const result = await response.json();
++      const data = await response.json();
+ 
+       if (!response.ok) {
+-        throw new Error(result.error || "Failed to send message. Please try again later.");
++        throw new Error(data.error || "Failed to send message");
+       }
+ 
+-      onSuccess();
+-    } catch (error: any) {
+-      setServerError(error.message);
++      if (onSuccess) {
++        onSuccess();
++      }
++    } catch (err: any) {
++      setError(err.message || "An error occurred while sending your message. Please try again.");
+     } finally {
+       setIsSubmitting(false);
++      setIsUploading(false);
+     }
+   };
+ 
+   return (
+     <motion.form 
+-      initial={{ opacity: 0, x: 20 }}
+-      whileInView={{ opacity: 1, x: 0 }}
+-      viewport={{ once: true, margin: "-100px" }}
+-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+-      onSubmit={handleSubmit(onSubmit)} 
+-      className="p-8 md:p-12 rounded-[2.5rem] bg-white/[0.02] border border-white/5 backdrop-blur-2xl flex flex-col gap-8 shadow-2xl relative"
++      onSubmit={handleSubmit}
++      initial={{ opacity: 0, y: 20 }}
++      whileInView={{ opacity: 1, y: 0 }}
++      viewport={{ once: true }}
++      suppressHydrationWarning
++      className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 backdrop-blur-sm relative overflow-hidden"
+     >
+-      <h3 className="text-2xl font-bold text-white tracking-tight">Project Inquiry</h3>
+-
+-      {serverError && (
+-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+-          {serverError}
+-        </div>
+-      )}
+-
+-      {/* Row 1: Name & Email */}
+-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+-        <div className="flex flex-col gap-2">
+-          <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Full Name *</label>
+-          <input 
+-            {...register("fullName")}
+-            suppressHydrationWarning
+-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all duration-300"
+-            placeholder="John Doe"
+-          />
+-          {errors.fullName && <span className="text-red-400 text-xs">{errors.fullName.message}</span>}
+-        </div>
+-        
+-        <div className="flex flex-col gap-2">
+-          <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Email Address *</label>
+-          <input 
+-            {...register("email")}
+-            type="email"
+-            suppressHydrationWarning
+-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all duration-300"
+-            placeholder="john@example.com"
+-          />
+-          {errors.email && <span className="text-red-400 text-xs">{errors.email.message}</span>}
+-        </div>
++      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10" />
++      
++      <div className="flex items-center gap-2 mb-8">
++        <Sparkles className="w-5 h-5 text-primary" />
++        <h3 className="text-xl font-semibold text-white">Let's Connect</h3>
+       </div>
++      
++      <div className="space-y-6 relative z-10">
++        {/* Full Name & Email */}
++        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
++          <div className="space-y-2">
++            <label className="text-sm font-medium text-white/70 ml-1">Full Name *</label>
++            <input
++              suppressHydrationWarning
++              type="text"
++              required
++              value={formData.fullName}
++              onChange={e => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
++              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] text-white placeholder-white/30 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all"
++              placeholder="John Doe"
++            />
++          </div>
++          <div className="space-y-2">
++            <label className="text-sm font-medium text-white/70 ml-1">Email Address *</label>
++            <input
++              suppressHydrationWarning
++              type="email"
++              required
++              value={formData.email}
++              onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
++              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] text-white placeholder-white/30 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all"
++              placeholder="john@example.com"
++            />
++          </div>
++        </div>
+ 
+-      {/* Row 2: Phone & WhatsApp */}
+-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+-        <div className="flex flex-col gap-2">
+-          <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Phone Number *</label>
+-          <div className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus-within:border-primary/50 focus-within:bg-white/10 transition-all duration-300 phone-input-container">
+-            <Controller
+-              name="phone"
+-              control={control}
+-              render={({ field }) => (
++        {/* Phone & WhatsApp */}
++        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
++          <div className="space-y-2">
++            <label className="text-sm font-medium text-white/70 ml-1">Phone Number</label>
++            <div suppressHydrationWarning>
++              {isMounted ? (
+                 <PhoneInput
+-                  {...field}
+-                  defaultCountry="IN"
+                   international
+-                  numberInputProps={{ suppressHydrationWarning: true }}
+-                  className="bg-transparent outline-none border-none w-full text-white"
++                  defaultCountry="IN"
++                  value={formData.phone}
++                  onChange={(value) => setFormData(prev => ({ ...prev, phone: value?.toString() || "" }))}
++                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] text-white focus-within:border-primary/50 focus-within:bg-white/10 transition-all phone-input-container"
+                 />
++              ) : (
++                <div className="w-full bg-white/5 border border-white/10 rounded-xl min-h-[48px]" />
+               )}
+-            />
++            </div>
++          </div>
++          <div className="space-y-2">
++            <div className="flex items-center justify-between ml-1">
++              <label className="text-sm font-medium text-white/70">WhatsApp Number</label>
++              <label className="flex items-center gap-2 cursor-pointer">
++                <input 
++                  type="checkbox" 
++                  checked={whatsappSameAsPhone}
++                  onChange={(e) => setWhatsappSameAsPhone(e.target.checked)}
++                  className="w-3.5 h-3.5 accent-primary rounded-sm"
++                />
++                <span className="text-xs text-white/50">Same as Phone</span>
++              </label>
++            </div>
++            <div suppressHydrationWarning>
++              {isMounted ? (
++                <div className={whatsappSameAsPhone ? "opacity-50 pointer-events-none" : ""}>
++                  <PhoneInput
++                    international
++                    defaultCountry="IN"
++                    value={whatsappSameAsPhone ? formData.phone : formData.whatsapp}
++                    onChange={(value) => setFormData(prev => ({ ...prev, whatsapp: value?.toString() || "" }))}
++                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] text-white focus-within:border-primary/50 focus-within:bg-white/10 transition-all phone-input-container"
++                  />
++                </div>
++              ) : (
++                <div className="w-full bg-white/5 border border-white/10 rounded-xl min-h-[48px]" />
++              )}
++            </div>
+           </div>
+-          {errors.phone && <span className="text-red-400 text-xs">{errors.phone.message}</span>}
+         </div>
+ 
+-        <div className="flex flex-col gap-2">
+-          <div className="flex items-center justify-between">
+-            <label className="text-xs font-semibold uppercase tracking-widest text-white/50">WhatsApp Number</label>
+-            <label className="flex items-center gap-2 cursor-pointer group">
+-              <input 
+-                type="checkbox" 
+-                {...register("sameAsPhone")}
+-                className="hidden"
+-              />
+-              <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${sameAsPhone ? 'bg-primary border-primary' : 'border-white/20 group-hover:border-white/50'}`}>
+-                {sameAsPhone && <CheckCircle2 className="w-3 h-3 text-black" />}
+-              </div>
+-              <span className="text-xs text-white/40 group-hover:text-white/70 transition-colors select-none">Same as Phone</span>
+-            </label>
++        {/* Subject & Purpose */}
++        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
++          <div className="space-y-2">
++            <label className="text-sm font-medium text-white/70 ml-1">Subject *</label>
++            <input
++              suppressHydrationWarning
++              type="text"
++              required
++              value={formData.subject}
++              onChange={e => setFormData(prev => ({ ...prev, subject: e.target.value }))}
++              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] text-white placeholder-white/30 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all"
++              placeholder="What is this regarding?"
++            />
+           </div>
+           
+-          <AnimatePresence mode="popLayout">
+-            {!sameAsPhone && (
+-              <motion.div 
+-                initial={{ opacity: 0, height: 0 }}
+-                animate={{ opacity: 1, height: 'auto' }}
+-                exit={{ opacity: 0, height: 0 }}
+-                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus-within:border-primary/50 focus-within:bg-white/10 transition-all duration-300 phone-input-container"
++          <div className="space-y-2">
++            <label className="text-sm font-medium text-white/70 ml-1">Message Purpose *</label>
++            <div className="relative">
++              <select
++                required
++                value={formData.purpose}
++                onChange={e => setFormData(prev => ({ ...prev, purpose: e.target.value }))}
++                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] text-white focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all appearance-none"
+               >
+-                <Controller
+-                  name="whatsapp"
+-                  control={control}
+-                  render={({ field }) => (
+-                    <PhoneInput
+-                      {...field}
+-                      defaultCountry="IN"
+-                      international
+-                      numberInputProps={{ suppressHydrationWarning: true }}
+-                      className="bg-transparent outline-none border-none w-full text-white"
+-                    />
+-                  )}
+-                />
+-              </motion.div>
+-            )}
+-          </AnimatePresence>
+-          {errors.whatsapp && !sameAsPhone && <span className="text-red-400 text-xs">{errors.whatsapp.message}</span>}
++                <option value="" disabled className="bg-background text-white/50">Select purpose</option>
++                {PURPOSES.map(purpose => (
++                  <option key={purpose} value={purpose} className="bg-background text-white">{purpose}</option>
++                ))}
++              </select>
++              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
++                <svg className="w-4 h-4 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
++              </div>
++            </div>
++          </div>
+         </div>
+-      </div>
+-
+-      {/* Subject */}
+-      <div className="flex flex-col gap-2">
+-        <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Subject *</label>
+-        <input 
+-          {...register("subject")}
+-          suppressHydrationWarning
+-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all duration-300"
+-          placeholder="Project Discussion"
+-        />
+-        {errors.subject && <span className="text-red-400 text-xs">{errors.subject.message}</span>}
+-      </div>
+ 
+-      {/* Inquiry Type (Radio Cards) */}
+-      <div className="flex flex-col gap-4">
+-        <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Inquiry Type *</label>
+-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+-          {INQUIRY_TYPES.map((type) => {
+-            const Icon = (LucideIcons as any)[type.icon] || LucideIcons.Circle;
+-            const isSelected = watch("inquiryType") === type.id;
+-            return (
+-              <label 
+-                key={type.id}
+-                className={`
+-                  flex flex-col items-center justify-center gap-2 p-4 rounded-xl border cursor-pointer transition-all duration-300 text-center
+-                  ${isSelected ? 'bg-primary/10 border-primary text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]' : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:border-white/30 hover:text-white/80'}
+-                `}
+-              >
+-                <input type="radio" value={type.id} {...register("inquiryType")} className="hidden" />
+-                <Icon className="w-5 h-5" />
+-                <span className="text-xs font-medium">{type.label}</span>
+-              </label>
+-            );
+-          })}
++        {/* Message */}
++        <div className="space-y-2">
++          <label className="text-sm font-medium text-white/70 ml-1">Message *</label>
++          <textarea
++            suppressHydrationWarning
++            required
++            rows={4}
++            value={formData.message}
++            onChange={e => setFormData(prev => ({ ...prev, message: e.target.value }))}
++            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[120px] text-white placeholder-white/30 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all resize-none"
++            placeholder="Tell me more about your inquiry (you can also include links here)..."
++          />
+         </div>
+-        {errors.inquiryType && <span className="text-red-400 text-xs">{errors.inquiryType.message}</span>}
+-      </div>
+ 
+-      {/* Message */}
+-      <div className="flex flex-col gap-2">
+-        <div className="flex justify-between">
+-          <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Message *</label>
+-          <span className="text-xs text-white/30">{watch("message")?.length || 0} / 2000</span>
+-        </div>
+-        <textarea 
+-          {...register("message")}
+-          rows={5}
+-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all duration-300 resize-none"
+-          placeholder="Tell me about your project, timeline, and expectations..."
+-        />
+-        {errors.message && <span className="text-red-400 text-xs">{errors.message.message}</span>}
+-      </div>
+-
+-      {/* Attachments */}
+-      <div className="flex flex-col gap-2">
+-        <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Attachments (Any Size)</label>
+-        
+-        <div 
+-          {...getRootProps()} 
+-          className={`
+-            w-full border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center gap-4 cursor-pointer transition-all duration-300
+-            ${isDragActive ? 'border-primary bg-primary/5 scale-[1.02]' : 'border-white/10 bg-white/5 hover:border-white/30 hover:bg-white/10'}
+-          `}
+-        >
+-          <input {...getInputProps()} />
+-          <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-white/50">
+-            <UploadCloud className={`w-6 h-6 transition-colors ${isDragActive ? 'text-primary' : ''}`} />
+-          </div>
+-          <div className="text-center">
+-            <p className="text-sm text-white font-medium mb-1">
+-              {isDragActive ? "Drop files here" : "Drag & drop files here, or click to browse"}
+-            </p>
+-            <p className="text-xs text-white/30">
+-              Any document, image, or video type (Max 5 files)
+-            </p>
++        {/* File Upload */}
++        <div className="space-y-2">
++          <label className="text-sm font-medium text-white/70 ml-1">Attachments (Images, Files, Videos)</label>
++          <div className="relative">
++            <input
++              suppressHydrationWarning
++              type="file"
++              multiple
++              onChange={handleFileChange}
++              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
++              title="Upload attachments"
++            />
++            <div className="w-full bg-white/5 border border-white/10 border-dashed rounded-xl px-4 py-6 flex flex-col items-center justify-center gap-2 hover:bg-white/10 hover:border-white/30 transition-all min-h-[48px]">
++              <Upload className="w-5 h-5 text-white/50" />
++              <span className="text-sm text-white/50 text-center">Click or drag files/videos here</span>
++            </div>
+           </div>
++          
++          {/* File List */}
++          {files.length > 0 && (
++            <div className="flex flex-col gap-2 mt-3">
++              {files.map((file, index) => (
++                <div key={index} className="flex items-center justify-between bg-white/5 rounded-lg px-3 py-2 min-h-[48px]">
++                  <span className="text-xs text-white/70 truncate max-w-[200px] sm:max-w-[300px]">
++                    {file.name}
++                  </span>
++                  <button
++                    suppressHydrationWarning
++                    type="button"
++                    onClick={() => removeFile(index)}
++                    className="text-xs text-red-400 hover:text-red-300 min-h-[48px] px-2 flex items-center justify-center"
++                  >
++                    Remove
++                  </button>
++                </div>
++              ))}
++            </div>
++          )}
+         </div>
+-        
+-        {fileError && <span className="text-red-400 text-xs mt-1">{fileError}</span>}
+ 
+-        {/* Uploaded Files Chips */}
+-        {files.length > 0 && (
+-          <div className="flex flex-wrap gap-3 mt-4">
+-            {files.map((file, idx) => (
+-              <div key={idx} className="flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-lg bg-white/10 border border-white/20">
+-                <Paperclip className="w-3.5 h-3.5 text-white/50" />
+-                <span className="text-xs text-white/80 max-w-[150px] truncate">{file.name}</span>
+-                <span className="text-[10px] text-white/40">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+-                <button 
+-                  type="button" 
+-                  onClick={() => removeFile(idx)}
+-                  className="ml-2 w-5 h-5 rounded-full hover:bg-red-500/20 text-white/50 hover:text-red-400 flex items-center justify-center transition-colors"
+-                >
+-                  <X className="w-3 h-3" />
+-                </button>
+-              </div>
+-            ))}
+-          </div>
++        {/* Error Message */}
++        {error && (
++          <motion.div 
++            initial={{ opacity: 0, height: 0 }}
++            animate={{ opacity: 1, height: "auto" }}
++            className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg p-3"
++            aria-live="assertive"
++          >
++            {error}
++          </motion.div>
+         )}
+-      </div>
+ 
+-      {/* Submit Button */}
+-      <div className="mt-4 flex flex-col sm:flex-row gap-4 items-center justify-end border-t border-white/10 pt-8">
+-        <button
+-          type="button"
+-          suppressHydrationWarning
+-          onClick={() => {
+-            setValue("fullName", "");
+-            setValue("email", "");
+-            setValue("phone", "");
+-            setValue("whatsapp", "");
+-            setValue("subject", "");
+-            setValue("inquiryType", "");
+-            setValue("message", "");
+-            setFiles([]);
+-            setFileError(null);
+-            setServerError(null);
+-          }}
+-          className="text-white/50 hover:text-white text-sm font-semibold uppercase tracking-widest transition-colors px-6 py-4"
+-        >
+-          Clear Form
+-        </button>
++        {/* Submit Button */}
+         <motion.button
+-          type="submit"
+           suppressHydrationWarning
++          whileHover={{ scale: 1.01 }}
++          whileTap={{ scale: 0.99 }}
+           disabled={isSubmitting}
+-          layout
+-          className={`px-10 py-4 rounded-xl font-bold text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(var(--primary-rgb),0.2)] ${
+-            isSubmitting 
+-              ? 'bg-primary/80 text-black/80 cursor-wait w-full sm:w-[240px]' 
+-              : 'bg-primary text-black hover:bg-primary/90 hover:scale-105 w-full sm:w-auto'
+-          }`}
++          type="submit"
++          className="w-full relative group overflow-hidden rounded-xl p-[1px] min-h-[48px]"
+         >
+-          {isSubmitting ? (
+-            <>
+-              <Loader2 className="w-5 h-5 animate-spin" />
+-              Sending Message...
+-            </>
+-          ) : (
+-            <>
+-              Send Message
+-              <Send className="w-4 h-4" />
+-            </>
+-          )}
++          <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
++          <div className="relative bg-black/50 backdrop-blur-md w-full h-full rounded-xl px-8 py-4 flex items-center justify-center gap-2 min-h-[48px]">
++            {isSubmitting ? (
++              <>
++                <Loader2 className="w-5 h-5 text-white animate-spin" />
++                <span className="text-white font-medium">
++                  {isUploading ? "Uploading files..." : "Sending..."}
++                </span>
++              </>
++            ) : (
++              <>
++                <Send className="w-5 h-5 text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
++                <span className="text-white font-medium">Send Inquiry</span>
++              </>
++            )}
++          </div>
+         </motion.button>
+       </div>
+-
+     </motion.form>
+   );
+ }
+diff --git a/src/components/experience/Experience.tsx b/src/components/experience/Experience.tsx
+index 914bc6a..84c94c0 100644
+--- a/src/components/experience/Experience.tsx
++++ b/src/components/experience/Experience.tsx
+@@ -7,7 +7,7 @@ import { ArrowDown } from "lucide-react";
+ 
+ export default function Experience() {
+   return (
+-    <section id="experience" className="relative w-full bg-background min-h-screen">
++    <section id="experience" className="relative w-full bg-background min-h-screen overflow-clip">
+       
+       {/* 1. Header Section */}
+       <ExperienceHeader />
+@@ -40,7 +40,7 @@ export default function Experience() {
+           <span className="text-sm font-medium uppercase tracking-[0.2em] text-primary mb-6">
+             Next Chapter
+           </span>
+-          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-8">
++          <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-8">
+             Academic Journey
+           </h2>
+           
+diff --git a/src/components/experience/ExperienceCard.tsx b/src/components/experience/ExperienceCard.tsx
+index d505d85..dc663ef 100644
+--- a/src/components/experience/ExperienceCard.tsx
++++ b/src/components/experience/ExperienceCard.tsx
+@@ -51,7 +51,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
+       
+       <div>
+         <div className="flex items-center gap-3 mb-6">
+-          <span className="text-3xl md:text-4xl">{data.icon}</span>
++          <span className="text-[var(--text-h2)]">{data.icon}</span>
+           <div>
+             <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight leading-tight">
+               {data.role}
+diff --git a/src/components/experience/ExperienceHeader.tsx b/src/components/experience/ExperienceHeader.tsx
+index ef1c9d5..9647a73 100644
+--- a/src/components/experience/ExperienceHeader.tsx
++++ b/src/components/experience/ExperienceHeader.tsx
+@@ -49,7 +49,7 @@ export default function ExperienceHeader() {
+         initial="hidden"
+         whileInView="visible"
+         viewport={{ once: true, margin: "-100px" }}
+-        className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1]"
++        className="text-[var(--text-h1)] font-bold tracking-tight text-white mb-6 leading-[1.1]"
+       >
+         {words.map((word, idx) => (
+           <motion.span
+@@ -68,7 +68,7 @@ export default function ExperienceHeader() {
+         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+         viewport={{ once: true, margin: "-100px" }}
+         transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+-        className="text-lg md:text-xl text-white/60 font-light leading-relaxed max-w-2xl"
++        className="text-[var(--text-body)] text-white/60 font-light leading-relaxed max-w-2xl"
+       >
+         Every opportunity shaped my skillsΓÇöfrom learning the fundamentals to delivering production-ready AI and Full Stack solutions.
+       </motion.p>
+diff --git a/src/components/experience/FutureVision.tsx b/src/components/experience/FutureVision.tsx
+index d227c91..68c99a0 100644
+--- a/src/components/experience/FutureVision.tsx
++++ b/src/components/experience/FutureVision.tsx
+@@ -10,7 +10,7 @@ export default function FutureVision() {
+         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-50 blur-3xl" />
+         
+         <div className="relative z-10">
+-          <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">
++          <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-4">
+             {FUTURE_VISION.title}
+           </h2>
+           <p className="text-lg text-primary font-medium mb-8">
+diff --git a/src/components/expertise/ExpertiseHeader.tsx b/src/components/expertise/ExpertiseHeader.tsx
+index 29cf095..6c522fb 100644
+--- a/src/components/expertise/ExpertiseHeader.tsx
++++ b/src/components/expertise/ExpertiseHeader.tsx
+@@ -61,7 +61,7 @@ export default function ExpertiseHeader() {
+         Expertise
+       </motion.span>
+       
+-      <h2 className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-8">
++      <h2 className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-[var(--text-h1)] font-bold tracking-tighter text-white mb-8">
+         {words.map((word, i) => (
+           <motion.span key={i} variants={wordVariants} className="inline-block">
+             {word}
+@@ -71,7 +71,7 @@ export default function ExpertiseHeader() {
+ 
+       <motion.p 
+         variants={subtitleVariants}
+-        className="max-w-2xl text-lg md:text-xl font-light text-gray-custom leading-relaxed"
++        className="max-w-2xl text-[var(--text-body)] font-light text-gray-custom leading-relaxed"
+       >
+         Building scalable web applications, AI-powered solutions, cloud deployments, and business automation using modern technologies.
+       </motion.p>
+diff --git a/src/components/footer/FooterConstellation.tsx b/src/components/footer/FooterConstellation.tsx
+index 0f8e477..00c4d8d 100644
+--- a/src/components/footer/FooterConstellation.tsx
++++ b/src/components/footer/FooterConstellation.tsx
+@@ -11,7 +11,6 @@ interface Particle {
+   vy: number;
+ }
+ 
+-const PARTICLE_COUNT = 25;
+ const CONNECTION_DISTANCE = 200;
+ 
+ export default function FooterConstellation() {
+@@ -19,6 +18,7 @@ export default function FooterConstellation() {
+   const requestRef = useRef<number | undefined>(undefined);
+   const prefersReducedMotion = useReducedMotion();
+   const [isVisible, setIsVisible] = useState(false);
++  const [particleCount, setParticleCount] = useState(0);
+   
+   // Refs for direct DOM manipulation to avoid React re-renders
+   const particlesRef = useRef<Particle[]>([]);
+@@ -44,7 +44,15 @@ export default function FooterConstellation() {
+   useEffect(() => {
+     if (typeof window === "undefined" || prefersReducedMotion) return;
+     
+-    particlesRef.current = Array.from({ length: PARTICLE_COUNT }).map((_, i) => ({
++    // Determine motion level based on screen width
++    const width = window.innerWidth;
++    let count = 8; // Mobile
++    if (width > 1024) count = 30; // Desktop
++    else if (width > 768) count = 18; // Tablet
++    
++    setParticleCount(count);
++
++    particlesRef.current = Array.from({ length: count }).map((_, i) => ({
+       id: i,
+       x: Math.random() * window.innerWidth,
+       y: Math.random() * window.innerHeight,
+@@ -120,7 +128,7 @@ export default function FooterConstellation() {
+   if (prefersReducedMotion) return null;
+ 
+   // We map over a static array just to create the initial SVG elements
+-  const renderArray = Array.from({ length: PARTICLE_COUNT });
++  const renderArray = Array.from({ length: particleCount });
+ 
+   return (
+     <div 
+diff --git a/src/components/footer/FooterContent.tsx b/src/components/footer/FooterContent.tsx
+index 1d6f497..e0356ff 100644
+--- a/src/components/footer/FooterContent.tsx
++++ b/src/components/footer/FooterContent.tsx
+@@ -90,7 +90,7 @@ export default function FooterContent() {
+             key={i} 
+             variants={wordVariants}
+             transition={{ duration: 0.6, ease: "easeOut" }}
+-            className="text-lg md:text-xl text-white/50 font-light"
++            className="text-[var(--text-body)] text-white/50 font-light"
+           >
+             {word}
+           </motion.span>
+diff --git a/src/components/hero/HeroContent.tsx b/src/components/hero/HeroContent.tsx
+index 7360cec..3536a73 100644
+--- a/src/components/hero/HeroContent.tsx
++++ b/src/components/hero/HeroContent.tsx
+@@ -31,14 +31,38 @@ export default function HeroContent() {
+       </motion.p>
+ 
+       {/* Name Title */}
+-      <div className="overflow-hidden mb-6">
++      <div className="overflow-hidden mb-6 flex justify-center">
+         <motion.h1
+-          initial={{ y: "100%" }}
+-          animate={{ y: 0 }}
+-          transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+-          className="text-5xl sm:text-6xl md:text-8xl font-bold tracking-tighter text-white"
++          className="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-bold tracking-tight text-white flex items-center justify-center"
++          initial="hidden"
++          animate="visible"
++          variants={{
++            hidden: { opacity: 1 },
++            visible: {
++              opacity: 1,
++              transition: {
++                staggerChildren: 0.08,
++                delayChildren: 0.1,
++              },
++            },
++          }}
+         >
+-          DHANUSH AV
++          {"DHANUSH AV".split("").map((char, index) => (
++            <motion.span
++              key={index}
++              variants={{
++                hidden: { y: "100%", opacity: 0 },
++                visible: { 
++                  y: 0, 
++                  opacity: 1,
++                  transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] }
++                },
++              }}
++              className={char === " " ? "w-4 md:w-8" : "inline-block"}
++            >
++              {char}
++            </motion.span>
++          ))}
+         </motion.h1>
+       </div>
+ 
+@@ -49,13 +73,13 @@ export default function HeroContent() {
+         transition={{ duration: 1, delay: 0.4 }}
+         className="flex flex-col items-center max-w-2xl"
+       >
+-        <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-white/90 mb-4 tracking-tight flex flex-col sm:flex-row items-center gap-2">
++        <h2 className="text-[var(--text-h3)] font-medium text-white/90 mb-4 tracking-tight flex flex-col sm:flex-row items-center gap-2">
+           <span>Full Stack Developer</span>
+           <span className="hidden sm:inline text-primary">&</span>
+           <span className="sm:hidden text-primary">&</span>
+           <span>AI Automation Engineer</span>
+         </h2>
+-        <p className="text-base sm:text-lg text-gray-custom leading-relaxed font-light">
++        <p className="text-[var(--text-body)] text-gray-custom leading-relaxed font-light">
+           Building Scalable Web Applications & AI Solutions.
+         </p>
+       </motion.div>
+diff --git a/src/components/projects/ProjectCard.tsx b/src/components/projects/ProjectCard.tsx
+index 3f9be99..1298db0 100644
+--- a/src/components/projects/ProjectCard.tsx
++++ b/src/components/projects/ProjectCard.tsx
+@@ -128,7 +128,7 @@ export default function ProjectCard({ project, onOpenCaseStudy }: ProjectCardPro
+           </p>
+ 
+           {/* Title */}
+-          <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-3">
++          <h3 className="text-[var(--text-h3)] font-bold text-white tracking-tight mb-3">
+             {project.title}
+           </h3>
+ 
+diff --git a/src/components/projects/ProjectModal.tsx b/src/components/projects/ProjectModal.tsx
+index 7bda41d..33cd767 100644
+--- a/src/components/projects/ProjectModal.tsx
++++ b/src/components/projects/ProjectModal.tsx
+@@ -70,7 +70,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
+               animate={{ opacity: 1, scale: 1, y: 0 }}
+               exit={{ opacity: 0, scale: 0.95, y: 20 }}
+               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+-              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-[#0A0A0A] border border-white/10 rounded-3xl shadow-2xl pointer-events-auto custom-scrollbar relative"
++              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-[#0A0A0A] border border-white/10 rounded-3xl shadow-2xl pointer-events-auto custom-scrollbar relative pb-[env(safe-area-inset-bottom)]"
+             >
+               
+               {/* Close Button */}
+@@ -97,7 +97,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
+                      className="object-cover opacity-80"
+                    />
+                  )}
+-                 <h2 className="text-4xl md:text-5xl font-bold text-white z-20 tracking-tighter">{project.title}</h2>
++                 <h2 className="text-[var(--text-h2)] font-bold text-white z-20 tracking-tighter">{project.title}</h2>
+               </div>
+ 
+               {/* Content */}
+@@ -111,7 +111,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
+                     </span>
+                     <span className="text-sm text-gray-custom">{project.meta.year}</span>
+                   </div>
+-                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">{project.title}</h2>
++                  <h2 className="text-[var(--text-h2)] font-bold text-white mb-2 tracking-tight">{project.title}</h2>
+                   <p className="text-lg text-primary font-medium">{project.category}</p>
+                 </div>
+ 
+diff --git a/src/components/projects/ProjectsHeader.tsx b/src/components/projects/ProjectsHeader.tsx
+index dcfeea2..12c46d9 100644
+--- a/src/components/projects/ProjectsHeader.tsx
++++ b/src/components/projects/ProjectsHeader.tsx
+@@ -61,7 +61,7 @@ export default function ProjectsHeader() {
+         Featured Projects
+       </motion.span>
+       
+-      <h2 className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-8 max-w-4xl">
++      <h2 className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-[var(--text-h1)] font-bold tracking-tighter text-white mb-8 max-w-4xl">
+         {words.map((word, i) => (
+           <motion.span key={i} variants={wordVariants} className="inline-block">
+             {word}
+@@ -71,7 +71,7 @@ export default function ProjectsHeader() {
+ 
+       <motion.p 
+         variants={subtitleVariants}
+-        className="max-w-3xl text-lg md:text-xl font-light text-gray-custom leading-relaxed"
++        className="max-w-3xl text-[var(--text-body)] font-light text-gray-custom leading-relaxed"
+       >
+         A curated collection of AI platforms, enterprise applications, business automation systems, SaaS products, and modern web applications built with scalable technologies.
+       </motion.p>
+diff --git a/src/components/services/ServiceCard.tsx b/src/components/services/ServiceCard.tsx
+index 94ec083..60ee128 100644
+--- a/src/components/services/ServiceCard.tsx
++++ b/src/components/services/ServiceCard.tsx
+@@ -50,14 +50,14 @@ export default function ServiceCard({ service }: ServiceCardProps) {
+              <IconComponent className="w-6 h-6 md:w-7 md:h-7 relative z-10 transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 ease-out" />
+            </div>
+ 
+-           <div className="text-white/10 font-bold text-4xl md:text-5xl tracking-tighter select-none font-mono">
++           <div className="text-white/10 font-bold text-[var(--text-h2)] tracking-tighter select-none font-mono">
+              {service.number}
+            </div>
+         </div>
+ 
+         {/* Content */}
+         <div className="mt-auto">
+-          <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-[1.2] mb-4 group-hover:text-primary transition-colors duration-500">
++          <h3 className="text-[var(--text-h3)] font-bold text-white tracking-tight leading-[1.2] mb-4 group-hover:text-primary transition-colors duration-500">
+             {service.title}
+           </h3>
+           <p className="text-white/50 text-sm md:text-base leading-relaxed mb-8 max-w-sm">
+diff --git a/src/components/services/ServicesCTA.tsx b/src/components/services/ServicesCTA.tsx
+index fdb0056..108669a 100644
+--- a/src/components/services/ServicesCTA.tsx
++++ b/src/components/services/ServicesCTA.tsx
+@@ -5,7 +5,7 @@ import { CheckCircle2, Download } from "lucide-react";
+ 
+ export default function ServicesCTA() {
+   return (
+-    <div className="relative w-full max-w-5xl mx-auto px-6 pb-40">
++    <div className="relative w-full container-md pb-40">
+       
+       {/* Tiny Strip above CTA */}
+       <motion.div
+@@ -39,10 +39,10 @@ export default function ServicesCTA() {
+         <div className="absolute inset-0 rounded-[2.5rem] border border-white/5 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-0" />
+ 
+         <div className="relative z-10 flex flex-col items-center">
+-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-6 max-w-3xl leading-[1.1]">
++          <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-6 max-w-3xl leading-[1.1]">
+             Let's Build Something Exceptional Together
+           </h2>
+-          <p className="text-lg md:text-xl text-white/60 mb-8 max-w-2xl font-light leading-relaxed">
++          <p className="text-[var(--text-body)] text-white/60 mb-8 max-w-2xl font-light leading-relaxed">
+             Whether you're launching a startup, automating a business, or building your next digital product, I'm ready to turn your ideas into reality.
+           </p>
+ 
+diff --git a/src/components/services/ServicesGrid.tsx b/src/components/services/ServicesGrid.tsx
+index eddb870..bb91927 100644
+--- a/src/components/services/ServicesGrid.tsx
++++ b/src/components/services/ServicesGrid.tsx
+@@ -25,7 +25,7 @@ export default function ServicesGrid() {
+   };
+ 
+   return (
+-    <div className="relative w-full max-w-7xl mx-auto px-6 pb-32">
++    <div className="relative w-full container-xl pb-32">
+       <motion.div 
+         variants={containerVariants}
+         initial="hidden"
+diff --git a/src/components/services/ServicesHeader.tsx b/src/components/services/ServicesHeader.tsx
+index 72f84c9..238c183 100644
+--- a/src/components/services/ServicesHeader.tsx
++++ b/src/components/services/ServicesHeader.tsx
+@@ -7,7 +7,7 @@ export default function ServicesHeader() {
+   const words = headingText.split(" ");
+ 
+   return (
+-    <div className="flex flex-col items-center justify-center text-center max-w-4xl mx-auto px-6 mb-24 md:mb-32 pt-20">
++    <div className="flex flex-col items-center justify-center text-center container-md mb-24 md:mb-32 pt-20">
+       
+       {/* Label */}
+       <motion.div
+@@ -21,7 +21,7 @@ export default function ServicesHeader() {
+       </motion.div>
+ 
+       {/* Heading (Word by Word reveal) */}
+-      <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1] mb-8 flex flex-wrap justify-center gap-x-3 gap-y-2 md:gap-x-4">
++      <h2 className="text-[var(--text-h1)] font-bold text-white tracking-tight leading-[1.1] mb-8 flex flex-wrap justify-center gap-x-3 gap-y-2 md:gap-x-4">
+         {words.map((word, i) => (
+           <motion.span
+             key={i}
+@@ -49,7 +49,7 @@ export default function ServicesHeader() {
+           delay: 0.2 + (words.length * 0.1) + 0.2, // Play after heading
+           ease: "easeOut"
+         }}
+-        className="text-lg md:text-xl font-light text-white/60 max-w-2xl leading-relaxed"
++        className="text-[var(--text-body)] font-light text-white/60 max-w-2xl leading-relaxed"
+       >
+         From modern web applications to AI-powered automation, I build reliable, scalable, and business-focused software solutions that solve real-world problems.
+       </motion.p>
+diff --git a/src/components/services/ServicesProcess.tsx b/src/components/services/ServicesProcess.tsx
+index 85cef13..2022d3c 100644
+--- a/src/components/services/ServicesProcess.tsx
++++ b/src/components/services/ServicesProcess.tsx
+@@ -18,7 +18,7 @@ export default function ServicesProcess() {
+   const pathLength = useTransform(scrollYProgress, [0, 0.8], [0, 1]);
+ 
+   return (
+-    <div ref={containerRef} className="relative w-full max-w-6xl mx-auto px-6 py-32 flex flex-col items-center">
++    <div ref={containerRef} className="relative w-full container-lg py-32 flex flex-col items-center">
+       
+       {/* Animated Background Grid */}
+       <div 
+@@ -39,7 +39,7 @@ export default function ServicesProcess() {
+         <span className="inline-block px-3 py-1 rounded-full border border-primary/30 bg-primary/5 text-primary text-[10px] font-semibold uppercase tracking-widest mb-6">
+           Process
+         </span>
+-        <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
++        <h3 className="text-[var(--text-h2)] font-bold text-white tracking-tight">
+           How I Work
+         </h3>
+       </motion.div>
+diff --git a/src/components/services/WhyChooseMe.tsx b/src/components/services/WhyChooseMe.tsx
+index 412013a..3324fcd 100644
+--- a/src/components/services/WhyChooseMe.tsx
++++ b/src/components/services/WhyChooseMe.tsx
+@@ -6,7 +6,7 @@ import * as LucideIcons from "lucide-react";
+ 
+ export default function WhyChooseMe() {
+   return (
+-    <div className="relative w-full max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
++    <div className="relative w-full container-xl py-24 border-t border-white/5">
+       
+       <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-20 gap-8">
+         <motion.div
+@@ -15,7 +15,7 @@ export default function WhyChooseMe() {
+           viewport={{ once: true, margin: "-100px" }}
+           transition={{ duration: 0.6 }}
+         >
+-          <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">
++          <h3 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-4">
+             Why Choose Me?
+           </h3>
+           <p className="text-white/50 text-lg max-w-lg">

@@ -10,7 +10,7 @@ export default function FutureVision() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-50 blur-3xl" />
         
         <div className="relative z-10">
-          <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">
+          <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-4">
             {FUTURE_VISION.title}
           </h2>
           <p className="text-lg text-primary font-medium mb-8">

@@ -95,7 +95,7 @@ export default function About() {
             About Me
           </motion.span>
           
-          <h2 className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white">
+          <h2 className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-[var(--text-h1)] font-bold tracking-tighter text-white">
             {words.map((word, i) => (
               <motion.span key={i} variants={wordVariants} className="inline-block">
                 {word}

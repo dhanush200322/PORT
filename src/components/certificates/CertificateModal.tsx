@@ -52,7 +52,7 @@ export default function CertificateModal({ certificate, onClose }: CertificateMo
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-background/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden"
+            className="relative w-full max-w-5xl max-h-[90dvh] overflow-y-auto bg-background/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] pb-[env(safe-area-inset-bottom)] flex flex-col md:flex-row overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
@@ -92,7 +92,7 @@ export default function CertificateModal({ certificate, onClose }: CertificateMo
                      Completed
                    </span>
                  </div>
-                 <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-2">
+                 <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-2">
                    {certificate.title}
                  </h2>
                </div>

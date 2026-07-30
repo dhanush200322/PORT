@@ -51,7 +51,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
       
       <div>
         <div className="flex items-center gap-3 mb-6">
-          <span className="text-3xl md:text-4xl">{data.icon}</span>
+          <span className="text-[var(--text-h2)]">{data.icon}</span>
           <div>
             <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight leading-tight">
               {data.role}

@@ -61,7 +61,7 @@ export default function ExpertiseHeader() {
         Expertise
       </motion.span>
       
-      <h2 className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-8">
+      <h2 className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-[var(--text-h1)] font-bold tracking-tighter text-white mb-8">
         {words.map((word, i) => (
           <motion.span key={i} variants={wordVariants} className="inline-block">
             {word}
@@ -71,7 +71,7 @@ export default function ExpertiseHeader() {
 
       <motion.p 
         variants={subtitleVariants}
-        className="max-w-2xl text-lg md:text-xl font-light text-gray-custom leading-relaxed"
+        className="max-w-2xl text-[var(--text-body)] font-light text-gray-custom leading-relaxed"
       >
         Building scalable web applications, AI-powered solutions, cloud deployments, and business automation using modern technologies.
       </motion.p>

@@ -25,7 +25,7 @@ export default function ServicesGrid() {
   };
 
   return (
-    <div className="relative w-full max-w-7xl mx-auto px-6 pb-32">
+    <div className="relative w-full container-xl pb-32">
       <motion.div 
         variants={containerVariants}
         initial="hidden"

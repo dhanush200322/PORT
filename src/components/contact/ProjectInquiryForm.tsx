@@ -1,373 +1,338 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Send, Upload, Loader2, Sparkles } from "lucide-react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { useDropzone } from "react-dropzone";
-import { INQUIRY_TYPES } from "./ContactData";
-import { Loader2, Send, UploadCloud, X, CheckCircle2, FileText, Paperclip } from "lucide-react";
-import * as LucideIcons from "lucide-react";
 
-const MAX_FILES = 5;
-
-const formSchema = z.object({
-  fullName: z.string().min(1, "Name is required."),
-  email: z.string().email("Please enter a valid email address."),
-  phone: z.string().min(1, "Phone number is required."),
-  sameAsPhone: z.boolean(),
-  whatsapp: z.string().optional(),
-  subject: z.string().min(1, "Subject is required."),
-  inquiryType: z.string().min(1, "Please select an inquiry type."),
-  message: z.string().min(1, "Message is required.").max(5000, "Message is too long."),
-}).refine(data => {
-  if (!data.sameAsPhone && (!data.whatsapp || data.whatsapp.length < 1)) {
-    return data.whatsapp === undefined || data.whatsapp === "" || data.whatsapp.length >= 1;
-  }
-  return true;
-}, {
-  message: "WhatsApp number is required if not same as phone.",
-  path: ["whatsapp"],
-});
-
-type FormData = z.infer<typeof formSchema>;
-
-interface ProjectInquiryFormProps {
-  onSuccess: () => void;
+interface FormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  whatsapp: string;
+  subject: string;
+  purpose: string;
+  message: string;
 }
 
-export default function ProjectInquiryForm({ onSuccess }: ProjectInquiryFormProps) {
+const PURPOSES = [
+  "Job Purpose",
+  "Consulting",
+  "Freelance Work",
+  "Internship",
+  "Full-Time Opportunity"
+];
+
+export default function ProjectInquiryForm({ onSuccess }: { onSuccess?: () => void }) {
+  const [formData, setFormData] = useState<FormData>({
+    fullName: "",
+    email: "",
+    phone: "",
+    whatsapp: "",
+    subject: "",
+    purpose: "",
+    message: "",
+  });
+
+  const [whatsappSameAsPhone, setWhatsappSameAsPhone] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
-  const [fileError, setFileError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  const { register, handleSubmit, control, watch, setValue, formState: { errors } } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      sameAsPhone: false,
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files);
+      const validFiles = selectedFiles.filter(file => file.size <= 25 * 1024 * 1024); // Increased to 25MB for videos
+      
+      if (validFiles.length !== selectedFiles.length) {
+        setError("Some files were skipped. Maximum file size is 25MB.");
+      }
+      
+      if (files.length + validFiles.length > 5) { // Increased to 5 files
+        setError("Maximum 5 files allowed.");
+        return;
+      }
+      
+      setFiles(prev => [...prev, ...validFiles]);
     }
-  });
-
-  const sameAsPhone = watch("sameAsPhone");
-  const phoneVal = watch("phone");
-
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFileError(null);
-    const newFiles = [...files, ...acceptedFiles];
-    
-    if (newFiles.length > MAX_FILES) {
-      setFileError(`You can only upload a maximum of ${MAX_FILES} files.`);
-      return;
-    }
-
-    setFiles(newFiles);
-  }, [files]);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop
-  });
-
-  const removeFile = (indexToRemove: number) => {
-    setFiles(files.filter((_, i) => i !== indexToRemove));
-    setFileError(null);
   };
 
-  const onSubmit = async (data: FormData) => {
+  const removeFile = (index: number) => {
+    setFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setIsSubmitting(true);
-    setServerError(null);
+    setError(null);
+    setIsUploading(true);
 
     try {
-      const formData = new FormData();
-      formData.append("fullName", data.fullName);
-      formData.append("email", data.email);
-      formData.append("phone", data.phone);
-      formData.append("whatsapp", data.sameAsPhone ? data.phone : (data.whatsapp || ""));
-      formData.append("subject", data.subject);
-      formData.append("inquiryType", data.inquiryType);
-      formData.append("message", data.message);
-
+      const form = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === 'whatsapp' && whatsappSameAsPhone) {
+          form.append(key, formData.phone);
+        } else {
+          form.append(key, value);
+        }
+      });
+      
       files.forEach((file) => {
-        formData.append("files", file);
+        form.append("attachments", file);
       });
 
       const response = await fetch("/api/contact", {
         method: "POST",
-        body: formData,
+        body: form,
       });
 
-      const result = await response.json();
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || "Failed to send message. Please try again later.");
+        throw new Error(data.error || "Failed to send message");
       }
 
-      onSuccess();
-    } catch (error: any) {
-      setServerError(error.message);
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (err: any) {
+      setError(err.message || "An error occurred while sending your message. Please try again.");
     } finally {
       setIsSubmitting(false);
+      setIsUploading(false);
     }
   };
 
   return (
     <motion.form 
-      initial={{ opacity: 0, x: 20 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      onSubmit={handleSubmit(onSubmit)} 
-      className="p-8 md:p-12 rounded-[2.5rem] bg-white/[0.02] border border-white/5 backdrop-blur-2xl flex flex-col gap-8 shadow-2xl relative"
+      onSubmit={handleSubmit}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      suppressHydrationWarning
+      className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 backdrop-blur-sm relative overflow-hidden"
     >
-      <h3 className="text-2xl font-bold text-white tracking-tight">Project Inquiry</h3>
-
-      {serverError && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-          {serverError}
-        </div>
-      )}
-
-      {/* Row 1: Name & Email */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Full Name *</label>
-          <input 
-            {...register("fullName")}
-            suppressHydrationWarning
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all duration-300"
-            placeholder="John Doe"
-          />
-          {errors.fullName && <span className="text-red-400 text-xs">{errors.fullName.message}</span>}
-        </div>
-        
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Email Address *</label>
-          <input 
-            {...register("email")}
-            type="email"
-            suppressHydrationWarning
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all duration-300"
-            placeholder="john@example.com"
-          />
-          {errors.email && <span className="text-red-400 text-xs">{errors.email.message}</span>}
-        </div>
+      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10" />
+      
+      <div className="flex items-center gap-2 mb-8">
+        <Sparkles className="w-5 h-5 text-primary" />
+        <h3 className="text-xl font-semibold text-white">Let's Connect</h3>
       </div>
-
-      {/* Row 2: Phone & WhatsApp */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Phone Number *</label>
-          <div className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus-within:border-primary/50 focus-within:bg-white/10 transition-all duration-300 phone-input-container">
-            <Controller
-              name="phone"
-              control={control}
-              render={({ field }) => (
-                <PhoneInput
-                  {...field}
-                  defaultCountry="IN"
-                  international
-                  numberInputProps={{ suppressHydrationWarning: true }}
-                  className="bg-transparent outline-none border-none w-full text-white"
-                />
-              )}
+      
+      <div className="space-y-6 relative z-10">
+        {/* Full Name & Email */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-white/70 ml-1">Full Name *</label>
+            <input
+              suppressHydrationWarning
+              type="text"
+              required
+              value={formData.fullName}
+              onChange={e => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] text-white placeholder-white/30 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all"
+              placeholder="John Doe"
             />
           </div>
-          {errors.phone && <span className="text-red-400 text-xs">{errors.phone.message}</span>}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-white/70 ml-1">Email Address *</label>
+            <input
+              suppressHydrationWarning
+              type="email"
+              required
+              value={formData.email}
+              onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] text-white placeholder-white/30 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all"
+              placeholder="john@example.com"
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-semibold uppercase tracking-widest text-white/50">WhatsApp Number</label>
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input 
-                type="checkbox" 
-                {...register("sameAsPhone")}
-                className="hidden"
-              />
-              <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${sameAsPhone ? 'bg-primary border-primary' : 'border-white/20 group-hover:border-white/50'}`}>
-                {sameAsPhone && <CheckCircle2 className="w-3 h-3 text-black" />}
-              </div>
-              <span className="text-xs text-white/40 group-hover:text-white/70 transition-colors select-none">Same as Phone</span>
-            </label>
+        {/* Phone & WhatsApp */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-white/70 ml-1">Phone Number</label>
+            <div suppressHydrationWarning>
+              {isMounted ? (
+                <PhoneInput
+                  international
+                  defaultCountry="IN"
+                  value={formData.phone}
+                  onChange={(value) => setFormData(prev => ({ ...prev, phone: value?.toString() || "" }))}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] text-white focus-within:border-primary/50 focus-within:bg-white/10 transition-all phone-input-container"
+                />
+              ) : (
+                <div className="w-full bg-white/5 border border-white/10 rounded-xl min-h-[48px]" />
+              )}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between ml-1">
+              <label className="text-sm font-medium text-white/70">WhatsApp Number</label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  checked={whatsappSameAsPhone}
+                  onChange={(e) => setWhatsappSameAsPhone(e.target.checked)}
+                  className="w-3.5 h-3.5 accent-primary rounded-sm"
+                />
+                <span className="text-xs text-white/50">Same as Phone</span>
+              </label>
+            </div>
+            <div suppressHydrationWarning>
+              {isMounted ? (
+                <div className={whatsappSameAsPhone ? "opacity-50 pointer-events-none" : ""}>
+                  <PhoneInput
+                    international
+                    defaultCountry="IN"
+                    value={whatsappSameAsPhone ? formData.phone : formData.whatsapp}
+                    onChange={(value) => setFormData(prev => ({ ...prev, whatsapp: value?.toString() || "" }))}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] text-white focus-within:border-primary/50 focus-within:bg-white/10 transition-all phone-input-container"
+                  />
+                </div>
+              ) : (
+                <div className="w-full bg-white/5 border border-white/10 rounded-xl min-h-[48px]" />
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Subject & Purpose */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-white/70 ml-1">Subject *</label>
+            <input
+              suppressHydrationWarning
+              type="text"
+              required
+              value={formData.subject}
+              onChange={e => setFormData(prev => ({ ...prev, subject: e.target.value }))}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] text-white placeholder-white/30 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all"
+              placeholder="What is this regarding?"
+            />
           </div>
           
-          <AnimatePresence mode="popLayout">
-            {!sameAsPhone && (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus-within:border-primary/50 focus-within:bg-white/10 transition-all duration-300 phone-input-container"
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-white/70 ml-1">Message Purpose *</label>
+            <div className="relative">
+              <select
+                required
+                value={formData.purpose}
+                onChange={e => setFormData(prev => ({ ...prev, purpose: e.target.value }))}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] text-white focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all appearance-none"
               >
-                <Controller
-                  name="whatsapp"
-                  control={control}
-                  render={({ field }) => (
-                    <PhoneInput
-                      {...field}
-                      defaultCountry="IN"
-                      international
-                      numberInputProps={{ suppressHydrationWarning: true }}
-                      className="bg-transparent outline-none border-none w-full text-white"
-                    />
-                  )}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-          {errors.whatsapp && !sameAsPhone && <span className="text-red-400 text-xs">{errors.whatsapp.message}</span>}
-        </div>
-      </div>
-
-      {/* Subject */}
-      <div className="flex flex-col gap-2">
-        <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Subject *</label>
-        <input 
-          {...register("subject")}
-          suppressHydrationWarning
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all duration-300"
-          placeholder="Project Discussion"
-        />
-        {errors.subject && <span className="text-red-400 text-xs">{errors.subject.message}</span>}
-      </div>
-
-      {/* Inquiry Type (Radio Cards) */}
-      <div className="flex flex-col gap-4">
-        <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Inquiry Type *</label>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {INQUIRY_TYPES.map((type) => {
-            const Icon = (LucideIcons as any)[type.icon] || LucideIcons.Circle;
-            const isSelected = watch("inquiryType") === type.id;
-            return (
-              <label 
-                key={type.id}
-                className={`
-                  flex flex-col items-center justify-center gap-2 p-4 rounded-xl border cursor-pointer transition-all duration-300 text-center
-                  ${isSelected ? 'bg-primary/10 border-primary text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]' : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:border-white/30 hover:text-white/80'}
-                `}
-              >
-                <input type="radio" value={type.id} {...register("inquiryType")} className="hidden" />
-                <Icon className="w-5 h-5" />
-                <span className="text-xs font-medium">{type.label}</span>
-              </label>
-            );
-          })}
-        </div>
-        {errors.inquiryType && <span className="text-red-400 text-xs">{errors.inquiryType.message}</span>}
-      </div>
-
-      {/* Message */}
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between">
-          <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Message *</label>
-          <span className="text-xs text-white/30">{watch("message")?.length || 0} / 2000</span>
-        </div>
-        <textarea 
-          {...register("message")}
-          rows={5}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all duration-300 resize-none"
-          placeholder="Tell me about your project, timeline, and expectations..."
-        />
-        {errors.message && <span className="text-red-400 text-xs">{errors.message.message}</span>}
-      </div>
-
-      {/* Attachments */}
-      <div className="flex flex-col gap-2">
-        <label className="text-xs font-semibold uppercase tracking-widest text-white/50">Attachments (Any Size)</label>
-        
-        <div 
-          {...getRootProps()} 
-          className={`
-            w-full border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center gap-4 cursor-pointer transition-all duration-300
-            ${isDragActive ? 'border-primary bg-primary/5 scale-[1.02]' : 'border-white/10 bg-white/5 hover:border-white/30 hover:bg-white/10'}
-          `}
-        >
-          <input {...getInputProps()} />
-          <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-white/50">
-            <UploadCloud className={`w-6 h-6 transition-colors ${isDragActive ? 'text-primary' : ''}`} />
-          </div>
-          <div className="text-center">
-            <p className="text-sm text-white font-medium mb-1">
-              {isDragActive ? "Drop files here" : "Drag & drop files here, or click to browse"}
-            </p>
-            <p className="text-xs text-white/30">
-              Any document, image, or video type (Max 5 files)
-            </p>
-          </div>
-        </div>
-        
-        {fileError && <span className="text-red-400 text-xs mt-1">{fileError}</span>}
-
-        {/* Uploaded Files Chips */}
-        {files.length > 0 && (
-          <div className="flex flex-wrap gap-3 mt-4">
-            {files.map((file, idx) => (
-              <div key={idx} className="flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-lg bg-white/10 border border-white/20">
-                <Paperclip className="w-3.5 h-3.5 text-white/50" />
-                <span className="text-xs text-white/80 max-w-[150px] truncate">{file.name}</span>
-                <span className="text-[10px] text-white/40">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                <button 
-                  type="button" 
-                  onClick={() => removeFile(idx)}
-                  className="ml-2 w-5 h-5 rounded-full hover:bg-red-500/20 text-white/50 hover:text-red-400 flex items-center justify-center transition-colors"
-                >
-                  <X className="w-3 h-3" />
-                </button>
+                <option value="" disabled className="bg-background text-white/50">Select purpose</option>
+                {PURPOSES.map(purpose => (
+                  <option key={purpose} value={purpose} className="bg-background text-white">{purpose}</option>
+                ))}
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                <svg className="w-4 h-4 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
               </div>
-            ))}
+            </div>
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* Submit Button */}
-      <div className="mt-4 flex flex-col sm:flex-row gap-4 items-center justify-end border-t border-white/10 pt-8">
-        <button
-          type="button"
-          suppressHydrationWarning
-          onClick={() => {
-            setValue("fullName", "");
-            setValue("email", "");
-            setValue("phone", "");
-            setValue("whatsapp", "");
-            setValue("subject", "");
-            setValue("inquiryType", "");
-            setValue("message", "");
-            setFiles([]);
-            setFileError(null);
-            setServerError(null);
-          }}
-          className="text-white/50 hover:text-white text-sm font-semibold uppercase tracking-widest transition-colors px-6 py-4"
-        >
-          Clear Form
-        </button>
-        <motion.button
-          type="submit"
-          suppressHydrationWarning
-          disabled={isSubmitting}
-          layout
-          className={`px-10 py-4 rounded-xl font-bold text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(var(--primary-rgb),0.2)] ${
-            isSubmitting 
-              ? 'bg-primary/80 text-black/80 cursor-wait w-full sm:w-[240px]' 
-              : 'bg-primary text-black hover:bg-primary/90 hover:scale-105 w-full sm:w-auto'
-          }`}
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              Sending Message...
-            </>
-          ) : (
-            <>
-              Send Message
-              <Send className="w-4 h-4" />
-            </>
+        {/* Message */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-white/70 ml-1">Message *</label>
+          <textarea
+            suppressHydrationWarning
+            required
+            rows={4}
+            value={formData.message}
+            onChange={e => setFormData(prev => ({ ...prev, message: e.target.value }))}
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[120px] text-white placeholder-white/30 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all resize-none"
+            placeholder="Tell me more about your inquiry (you can also include links here)..."
+          />
+        </div>
+
+        {/* File Upload */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-white/70 ml-1">Attachments (Images, Files, Videos)</label>
+          <div className="relative">
+            <input
+              suppressHydrationWarning
+              type="file"
+              multiple
+              onChange={handleFileChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+              title="Upload attachments"
+            />
+            <div className="w-full bg-white/5 border border-white/10 border-dashed rounded-xl px-4 py-6 flex flex-col items-center justify-center gap-2 hover:bg-white/10 hover:border-white/30 transition-all min-h-[48px]">
+              <Upload className="w-5 h-5 text-white/50" />
+              <span className="text-sm text-white/50 text-center">Click or drag files/videos here</span>
+            </div>
+          </div>
+          
+          {/* File List */}
+          {files.length > 0 && (
+            <div className="flex flex-col gap-2 mt-3">
+              {files.map((file, index) => (
+                <div key={index} className="flex items-center justify-between bg-white/5 rounded-lg px-3 py-2 min-h-[48px]">
+                  <span className="text-xs text-white/70 truncate max-w-[200px] sm:max-w-[300px]">
+                    {file.name}
+                  </span>
+                  <button
+                    suppressHydrationWarning
+                    type="button"
+                    onClick={() => removeFile(index)}
+                    className="text-xs text-red-400 hover:text-red-300 min-h-[48px] px-2 flex items-center justify-center"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
           )}
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg p-3"
+            aria-live="assertive"
+          >
+            {error}
+          </motion.div>
+        )}
+
+        {/* Submit Button */}
+        <motion.button
+          suppressHydrationWarning
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
+          disabled={isSubmitting}
+          type="submit"
+          className="w-full relative group overflow-hidden rounded-xl p-[1px] min-h-[48px]"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="relative bg-black/50 backdrop-blur-md w-full h-full rounded-xl px-8 py-4 flex items-center justify-center gap-2 min-h-[48px]">
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-5 h-5 text-white animate-spin" />
+                <span className="text-white font-medium">
+                  {isUploading ? "Uploading files..." : "Sending..."}
+                </span>
+              </>
+            ) : (
+              <>
+                <Send className="w-5 h-5 text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                <span className="text-white font-medium">Send Inquiry</span>
+              </>
+            )}
+          </div>
         </motion.button>
       </div>
-
     </motion.form>
   );
 }

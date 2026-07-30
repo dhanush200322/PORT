@@ -7,7 +7,7 @@ import { ArrowDown } from "lucide-react";
 
 export default function Experience() {
   return (
-    <section id="experience" className="relative w-full bg-background min-h-screen">
+    <section id="experience" className="relative w-full bg-background min-h-screen overflow-clip">
       
       {/* 1. Header Section */}
       <ExperienceHeader />
@@ -40,7 +40,7 @@ export default function Experience() {
           <span className="text-sm font-medium uppercase tracking-[0.2em] text-primary mb-6">
             Next Chapter
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-8">
+          <h2 className="text-[var(--text-h2)] font-bold text-white tracking-tight mb-8">
             Academic Journey
           </h2>
           

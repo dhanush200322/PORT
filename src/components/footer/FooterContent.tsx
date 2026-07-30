@@ -90,7 +90,7 @@ export default function FooterContent() {
             key={i} 
             variants={wordVariants}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="text-lg md:text-xl text-white/50 font-light"
+            className="text-[var(--text-body)] text-white/50 font-light"
           >
             {word}
           </motion.span>

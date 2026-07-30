@@ -128,7 +128,7 @@ export default function ProjectCard({ project, onOpenCaseStudy }: ProjectCardPro
           </p>
 
           {/* Title */}
-          <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-3">
+          <h3 className="text-[var(--text-h3)] font-bold text-white tracking-tight mb-3">
             {project.title}
           </h3>
 

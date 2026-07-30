@@ -46,7 +46,7 @@ export default function CertificatesHeader() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1]"
+        className="text-[var(--text-h1)] font-bold tracking-tight text-white mb-6 leading-[1.1]"
       >
         {words.map((word, idx) => (
           <motion.span
@@ -65,7 +65,7 @@ export default function CertificatesHeader() {
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="text-lg md:text-xl text-white/60 font-light leading-relaxed max-w-2xl"
+        className="text-[var(--text-body)] text-white/60 font-light leading-relaxed max-w-2xl"
       >
         Every certification represents another step in my continuous journey of mastering modern technologies, software engineering, and AI-powered solutions.
       </motion.p>

@@ -50,14 +50,14 @@ export default function ServiceCard({ service }: ServiceCardProps) {
              <IconComponent className="w-6 h-6 md:w-7 md:h-7 relative z-10 transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 ease-out" />
            </div>
 
-           <div className="text-white/10 font-bold text-4xl md:text-5xl tracking-tighter select-none font-mono">
+           <div className="text-white/10 font-bold text-[var(--text-h2)] tracking-tighter select-none font-mono">
              {service.number}
            </div>
         </div>
 
         {/* Content */}
         <div className="mt-auto">
-          <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-[1.2] mb-4 group-hover:text-primary transition-colors duration-500">
+          <h3 className="text-[var(--text-h3)] font-bold text-white tracking-tight leading-[1.2] mb-4 group-hover:text-primary transition-colors duration-500">
             {service.title}
           </h3>
           <p className="text-white/50 text-sm md:text-base leading-relaxed mb-8 max-w-sm">

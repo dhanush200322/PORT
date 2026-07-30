@@ -21,7 +21,7 @@ export default function ContactHeader() {
       </motion.div>
 
       {/* Heading (Word by Word reveal) */}
-      <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-6 flex flex-wrap gap-x-3 gap-y-2">
+      <h2 className="text-[var(--text-h1)] font-bold text-white tracking-tight leading-[1.1] mb-6 flex flex-wrap gap-x-3 gap-y-2">
         {words.map((word, i) => (
           <motion.span
             key={i}
@@ -49,7 +49,7 @@ export default function ContactHeader() {
           delay: 0.1 + (words.length * 0.08) + 0.2, // Play after heading
           ease: "easeOut"
         }}
-        className="text-lg md:text-xl font-light text-white/60 leading-relaxed"
+        className="text-[var(--text-body)] font-light text-white/60 leading-relaxed"
       >
         Whether you're hiring a Full Stack Developer, looking for AI Automation, or planning your next digital product, I'd love to hear about your ideas.
       </motion.p>

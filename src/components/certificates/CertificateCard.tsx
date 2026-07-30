@@ -82,7 +82,7 @@ export default function CertificateCard({ certificate, onClick }: CertificateCar
 
         {/* Main Title */}
         <div className="mt-auto">
-          <h3 className={`${certificate.isFeatured ? 'text-4xl md:text-5xl lg:text-6xl' : 'text-2xl md:text-3xl'} font-bold text-white tracking-tight leading-[1.1] mb-8 group-hover:text-primary transition-colors duration-500`}>
+          <h3 className={`${certificate.isFeatured ? 'text-[var(--text-h1)]' : 'text-[var(--text-h3)]'} font-bold text-white tracking-tight leading-[1.1] mb-8 group-hover:text-primary transition-colors duration-500`}>
             {certificate.title}
           </h3>
 
