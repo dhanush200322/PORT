@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #04070D;
+  --color-foreground: #FFFFFF;
+  --color-primary: #4F8CFF;
+  --color-secondary: #9F5CFF;
+  --color-gray-custom: #94A3B8;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --background: #04070D;
+  --foreground: #FFFFFF;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #04070D;
+    --foreground: #FFFFFF;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Lenis recommended styles */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* React Phone Number Input Dark Mode Fixes */
+.phone-input-container {
+  color-scheme: dark;
+}
+.PhoneInputCountrySelect {
+  background-color: #04070D;
+  color: #FFFFFF;
+}
+.PhoneInputCountrySelect option {
+  background-color: #111111;
+  color: #FFFFFF;
+}
+.PhoneInputCountryIcon--border {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset !important;
+}
