@@ -1,43 +1,153 @@
 "use client";
 
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 
 export default function HeroVideo() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   
-  // The video MUST be muted by default in order to autoplay on modern browsers.
+  // State for voice toggle (Sound On/Off)
   const [isMuted, setIsMuted] = useState(true);
+  
+  // State for loading experience
+  const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  const handleContainerClick = () => {
-    if (isMuted && videoRef.current) {
-      videoRef.current.muted = false;
-      setIsMuted(false);
-      videoRef.current.play().catch(e => console.log("Play failed:", e));
-    }
-  };
-
   // Smooth parallax effect on scroll
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  const toggleMute = () => {
+  // Debug logging helper (Development only)
+  const logDebug = (msg: string) => {
+    if (process.env.NODE_ENV === "development") {
+      console.log(`Hero Video: ✓ ${msg}`);
+    }
+  };
+
+  const attemptPlay = useCallback(async (retryCount = 0) => {
+    if (!videoRef.current) return;
+
+    try {
+      // Must be muted for autoplay to succeed
+      videoRef.current.muted = true;
+      setIsMuted(true);
+      await videoRef.current.play();
+      setHasStartedPlaying(true);
+      logDebug(retryCount === 0 ? "autoplay success" : `retry #${retryCount}`);
+    } catch (err) {
+      // If play fails, retry or wait for interaction
+      if (retryCount === 0) {
+        setTimeout(() => attemptPlay(1), 300);
+      } else if (retryCount === 1) {
+        setTimeout(() => attemptPlay(2), 800);
+      } else {
+        logDebug("waiting for interaction to recover playback");
+        // Add interaction listeners as fallback
+        const recoverPlayback = () => {
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            videoRef.current.play()
+              .then(() => {
+                setHasStartedPlaying(true);
+                logDebug("recovered after interaction");
+                removeRecoveryListeners();
+              })
+              .catch(console.error);
+          }
+        };
+
+        const removeRecoveryListeners = () => {
+          document.removeEventListener('click', recoverPlayback);
+          document.removeEventListener('pointerdown', recoverPlayback);
+          document.removeEventListener('touchstart', recoverPlayback);
+          document.removeEventListener('keydown', recoverPlayback);
+          document.removeEventListener('scroll', recoverPlayback);
+        };
+
+        document.addEventListener('click', recoverPlayback);
+        document.addEventListener('pointerdown', recoverPlayback);
+        document.addEventListener('touchstart', recoverPlayback);
+        document.addEventListener('keydown', recoverPlayback);
+        document.addEventListener('scroll', recoverPlayback, { once: true });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleLoadedMetadata = () => {
+      logDebug("metadata loaded");
+      attemptPlay();
+    };
+
+    if (video.readyState >= 1) { // HAVE_METADATA or greater
+      handleLoadedMetadata();
+    } else {
+      video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    }
+
+    // Page Visibility API
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && videoRef.current?.paused) {
+        attemptPlay(0); // Restart the retry flow
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Intelligent playback recovery
+    const handlePlaybackStalled = () => {
+      if (document.visibilityState === 'visible' && videoRef.current?.paused) {
+        attemptPlay(0);
+      }
+    };
+    video.addEventListener('pause', handlePlaybackStalled);
+    video.addEventListener('waiting', handlePlaybackStalled);
+    video.addEventListener('suspend', handlePlaybackStalled);
+    video.addEventListener('stalled', handlePlaybackStalled);
+    
+    const handlePlaying = () => {
+      setHasStartedPlaying(true);
+      logDebug("playback started");
+    };
+    video.addEventListener('playing', handlePlaying);
+
+    return () => {
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      video.removeEventListener('pause', handlePlaybackStalled);
+      video.removeEventListener('waiting', handlePlaybackStalled);
+      video.removeEventListener('suspend', handlePlaybackStalled);
+      video.removeEventListener('stalled', handlePlaybackStalled);
+      video.removeEventListener('playing', handlePlaying);
+    };
+  }, [attemptPlay]);
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation(); // prevent container click from triggering twice
     if (videoRef.current) {
       const newMutedState = !isMuted;
       videoRef.current.muted = newMutedState;
       setIsMuted(newMutedState);
       
-      // If unmuting, ensure the video plays (browsers can pause on unmute)
       if (!newMutedState) {
         videoRef.current.play().catch(e => console.log("Play failed:", e));
       }
+    }
+  };
+
+  const handleContainerClick = () => {
+    if (isMuted && videoRef.current) {
+      videoRef.current.muted = false;
+      setIsMuted(false);
+      videoRef.current.play().catch(e => console.log("Play failed:", e));
     }
   };
 
@@ -66,10 +176,17 @@ export default function HeroVideo() {
         }}
       />
       
+      {/* Poster Placeholder (Shown until video starts playing) */}
+      <motion.div
+        className="absolute inset-0 z-0 bg-background/80 flex items-center justify-center"
+        animate={{ opacity: hasStartedPlaying ? 0 : 1 }}
+        transition={{ duration: 0.5 }}
+      />
+      
       {/* Fade in the video */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{ opacity: hasStartedPlaying ? 1 : 0 }}
         transition={{ duration: 1 }}
         className="absolute inset-0 w-full h-full pointer-events-none"
       >
