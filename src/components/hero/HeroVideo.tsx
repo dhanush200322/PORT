@@ -8,9 +8,8 @@ export default function HeroVideo() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   
-  // Browsers BLOCK unmuted autoplay, which causes the video to freeze.
-  // We MUST start with muted=true to allow the video to play automatically.
-  const [isMuted, setIsMuted] = useState(true);
+  // Force sound on by default as explicitly requested by user
+  const [isMuted, setIsMuted] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
