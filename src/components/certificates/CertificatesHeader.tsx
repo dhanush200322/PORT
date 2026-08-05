@@ -3,7 +3,7 @@
 import { motion, Variants } from "framer-motion";
 
 export default function CertificatesHeader() {
-  const headingText = "Hall of Achievements";
+  const headingText = "Professional Journey";
   const words = headingText.split(" ");
 
   const containerVariants: Variants = {
@@ -25,18 +25,18 @@ export default function CertificatesHeader() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center text-center max-w-3xl mx-auto px-6 pt-32 pb-16 z-20 relative">
+    <div className="flex flex-col items-center justify-center text-center max-w-4xl mx-auto px-6 pt-24 pb-8 z-20 relative">
       {/* Label */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10"
+        className="mb-6 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10"
       >
-        <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
-        <span className="text-xs md:text-sm font-medium tracking-[0.2em] text-white/80 uppercase">
-          PROFESSIONAL CREDENTIALS
+        <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+        <span className="text-xs md:text-sm font-semibold tracking-[0.2em] text-white/80 uppercase">
+          EXPERIENCE & CERTIFICATIONS
         </span>
       </motion.div>
 
@@ -46,7 +46,7 @@ export default function CertificatesHeader() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1]"
+        className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1]"
       >
         {words.map((word, idx) => (
           <motion.span
@@ -64,11 +64,12 @@ export default function CertificatesHeader() {
         initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="text-[var(--text-body)] text-white/60 font-light leading-relaxed max-w-2xl"
+        transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="text-white/70 font-light text-base md:text-lg leading-relaxed max-w-3xl"
       >
-        Every certification represents another step in my continuous journey of mastering modern technologies, software engineering, and AI-powered solutions.
+        Professional journey showcasing real-world internship experience and industry-recognized certifications.
       </motion.p>
     </div>
   );
 }
+

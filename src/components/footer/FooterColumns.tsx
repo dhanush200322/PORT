@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Clock } from "lucide-react";
 
 export default function FooterColumns() {
   const containerRef = useRef(null);
@@ -19,7 +19,7 @@ export default function FooterColumns() {
         timeZone: 'Asia/Kolkata',
         hour: '2-digit',
         minute: '2-digit',
-        second: '2-digit', // Optional: could remove seconds for cleaner look, but "Living" implies seconds
+        second: '2-digit',
         hour12: true
       });
       setTime(istTime);
@@ -66,10 +66,23 @@ export default function FooterColumns() {
           <p className="text-white/40 text-sm">Full Stack Developer &<br/>AI Automation Engineer</p>
         </div>
         
-        <div className="flex flex-col gap-1 mt-auto">
-          <span className="text-xs font-semibold uppercase tracking-widest text-white/30">Local Time</span>
-          <p className="text-white/80 font-mono text-sm tracking-wide">{time || "00:00:00 PM"}</p>
-          <p className="text-white/40 text-xs">Salem, India (IST)</p>
+        <div className="flex flex-col gap-1.5 mt-auto">
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-white/40 flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+            Local Time
+          </span>
+          <p suppressHydrationWarning className="text-white font-mono text-sm font-bold tracking-wider text-cyan-400 my-0.5">
+            {time || "04:07:06 PM IST"}
+          </p>
+          <a
+            href="https://maps.app.goo.gl/6mZ6vqCc8J56rRA1A"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/50 hover:text-cyan-300 text-xs transition-colors flex items-center gap-1 group/loc self-start"
+          >
+            <span>Salem, India (IST)</span>
+            <ArrowUpRight className="w-3 h-3 opacity-0 group-hover/loc:opacity-100 transition-opacity" />
+          </a>
         </div>
       </motion.div>
 

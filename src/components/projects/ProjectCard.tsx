@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform, Variants } from "framer-motion";
 import { Project } from "./ProjectData";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { useRef, useState } from "react";
 import Image from "next/image";
 
@@ -110,8 +110,14 @@ export default function ProjectCard({ project, onOpenCaseStudy }: ProjectCardPro
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90" />
       </div>
 
-      {/* Top Status Badge */}
-      <div className="absolute top-6 right-6 z-20">
+      {/* Top Status & Featured Badge */}
+      <div className="absolute top-6 right-6 z-20 flex items-center gap-2">
+        {project.isFeatured && (
+          <span className="px-3 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-amber-300 bg-amber-500/20 backdrop-blur-md rounded-full border border-amber-500/40 flex items-center gap-1.5 shadow-lg">
+            <Sparkles className="w-3 h-3 text-amber-300" />
+            Featured
+          </span>
+        )}
         <span className="px-3 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-white/90 bg-black/40 backdrop-blur-md rounded-full border border-white/10">
           {project.status}
         </span>

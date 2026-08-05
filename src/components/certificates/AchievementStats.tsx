@@ -35,7 +35,7 @@ function StatItem({ finalValue, label, suffix = "" }: StatItemProps) {
         {displayValue}
         <span className="text-primary ml-1">{suffix}</span>
       </div>
-      <div className="text-sm font-medium uppercase tracking-[0.15em] text-white/50 max-w-[150px] leading-relaxed">
+      <div className="text-sm font-medium uppercase tracking-[0.15em] text-white/50 max-w-[160px] leading-relaxed">
         {label}
       </div>
     </div>
@@ -44,18 +44,19 @@ function StatItem({ finalValue, label, suffix = "" }: StatItemProps) {
 
 export default function AchievementStats() {
   return (
-    <div className="w-full max-w-5xl mx-auto px-6 py-20 relative z-20">
+    <div className="w-full max-w-5xl mx-auto px-6 py-12 relative z-20">
       
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent blur-3xl opacity-50" />
 
       <div className="relative grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-white/10">
         
-        <StatItem finalValue={6} suffix="+" label="Professional Certifications" />
-        <StatItem finalValue={8} suffix="+" label="Projects Delivered" />
-        <StatItem finalValue={2} suffix="+" label="Professional Experiences" />
+        <StatItem finalValue={7} label="Certifications & Credentials" />
+        <StatItem finalValue={15} suffix="+" label="Skills Validated" />
+        <StatItem finalValue={2} suffix="+" label="Internship Experiences" />
         <StatItem finalValue={80} suffix="%" label="Engineering Score" />
         
       </div>
     </div>
   );
 }
+
