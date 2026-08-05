@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import HandshakeAnimation from "./HandshakeAnimation";
 import ServicesHeader from "./ServicesHeader";
 import ServicesGrid from "./ServicesGrid";
 import ServicesProcess from "./ServicesProcess";
@@ -9,7 +10,7 @@ import ServicesCTA from "./ServicesCTA";
 
 export default function Services() {
   return (
-    <section id="services" className="relative w-full bg-black min-h-screen overflow-hidden flex flex-col pt-32">
+    <section id="services" className="relative w-full bg-black min-h-screen overflow-hidden flex flex-col pt-16 md:pt-24">
       
       {/* Premium Background Elements */}
       {/* 1. Very low opacity geometric grid */}
@@ -51,6 +52,9 @@ export default function Services() {
 
       {/* Content Stream */}
       <div className="relative z-10 w-full flex flex-col">
+        {/* Scroll-Triggered Handshake Transition */}
+        <HandshakeAnimation />
+
         <ServicesHeader />
         <ServicesGrid />
         <ServicesProcess />
