@@ -2,7 +2,9 @@ import Hero from "@/components/hero/Hero";
 import About from "@/components/about/About";
 import Expertise from "@/components/expertise/Expertise";
 import Projects from "@/components/projects/Projects";
+import AutomationSection from "@/components/automation/AutomationSection";
 import Experience from "@/components/experience/Experience";
+
 import Academic from "@/components/academic/Academic";
 import Certificates from "@/components/certificates/Certificates";
 import Services from "@/components/services/Services";
@@ -17,6 +19,7 @@ export default function Home() {
       <About />
       <Expertise />
       <Projects />
+      <AutomationSection />
       <Experience />
       <Academic />
       <Certificates />

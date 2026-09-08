@@ -34,6 +34,11 @@
 :root {
   --background: #04070D;
   --foreground: #FFFFFF;
+  --ghl-purple: #7C3AED;
+  --ghl-violet: #8B5CF6;
+  --ghl-magenta: #D946EF;
+  --ghl-pink: #EC4899;
+  --ghl-dark: #04070D;
 }
 
 @media (prefers-color-scheme: dark) {
