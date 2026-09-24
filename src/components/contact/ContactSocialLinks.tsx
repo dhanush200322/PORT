@@ -23,6 +23,18 @@ const GumroadIcon = () => (
   </svg>
 );
 
+const FiverrIcon = () => (
+  <svg viewBox="0 0 508.02 508.02" className="w-5 h-5">
+    <circle fill="#1DBF73" cx="254.01" cy="254.01" r="254.01" />
+    <circle fill="#FFFFFF" cx="315.97" cy="162.19" r="26.87" />
+    <path
+      fill="#FFFFFF"
+      d="M345.87 207.66h-123V199.6c0-15.83 15.83-16.13 23.89-16.13 9.25 0 13.44.9 13.44.9v-43.6a155.21 155.21 0 0 0-19.71-1.19c-25.68 0-73.16 7.16-73.16 61.51V208h-22.4v40.31h22.4v85.1h-20.9v40.31H247.34V333.37H222.85v-85.1H290v85.1H269.13v40.31h97.65V333.37H345.87Z"
+      transform="translate(-1.83 -0.98)"
+    />
+  </svg>
+);
+
 const ResumeIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-[#38BDF8]" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
@@ -44,6 +56,7 @@ const getIcon = (id: string) => {
     case 'github': return <GithubIcon />;
     case 'linkedin': return <LinkedinIcon />;
     case 'gumroad': return <GumroadIcon />;
+    case 'fiverr': return <FiverrIcon />;
     case 'resume': return <ResumeIcon />;
     case 'email': return <EmailIcon />;
     default: return <ExternalLink className="w-5 h-5 text-white/70" />;
@@ -65,6 +78,7 @@ export default function ContactSocialLinks() {
               download={link.id === 'resume' ? true : undefined}
               target={link.id === 'resume' ? undefined : "_blank"}
               rel={link.id === 'resume' ? undefined : "noopener noreferrer"}
+              aria-label={link.ariaLabel || (link.id === 'resume' ? "Download my resume" : link.id === 'email' ? "Send me an email" : `Visit my ${link.name} profile`)}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}

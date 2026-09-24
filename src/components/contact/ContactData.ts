@@ -16,13 +16,7 @@ export const SOCIAL_LINKS = [
     description: "View my open-source projects",
     icon: "Github",
     url: "https://github.com/dhanush200322",
-  },
-  {
-    id: "linkedin",
-    name: "LinkedIn",
-    description: "Let's connect professionally",
-    icon: "Linkedin",
-    url: "https://www.linkedin.com/in/dhanush-av-618271378/",
+    ariaLabel: "Visit my GitHub profile",
   },
   {
     id: "gumroad",
@@ -30,6 +24,23 @@ export const SOCIAL_LINKS = [
     description: "Digital products & templates",
     icon: "Gumroad",
     url: "https://gumroad.com/products",
+    ariaLabel: "Visit my Gumroad store",
+  },
+  {
+    id: "fiverr",
+    name: "Fiverr",
+    description: "Freelance services & custom gigs",
+    icon: "Fiverr",
+    url: "https://www.fiverr.com/dhanushav318?public_mode=true",
+    ariaLabel: "Visit my Fiverr profile",
+  },
+  {
+    id: "linkedin",
+    name: "LinkedIn",
+    description: "Let's connect professionally",
+    icon: "Linkedin",
+    url: "https://www.linkedin.com/in/dhanush-av-618271378/",
+    ariaLabel: "Visit my LinkedIn profile",
   },
   {
     id: "resume",
@@ -37,6 +48,7 @@ export const SOCIAL_LINKS = [
     description: "Download my official CV",
     icon: "FileText",
     url: "/resume.pdf", 
+    ariaLabel: "Download my resume",
   },
   {
     id: "email",
@@ -44,5 +56,6 @@ export const SOCIAL_LINKS = [
     description: "ro224313@gmail.com",
     icon: "Mail",
     url: "mailto:ro224313@gmail.com",
+    ariaLabel: "Send me an email",
   },
 ];

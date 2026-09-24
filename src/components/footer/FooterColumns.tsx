@@ -44,8 +44,9 @@ export default function FooterColumns() {
       title: "Social",
       links: [
         { label: "GitHub", href: "https://github.com/dhanush200322", external: true },
-        { label: "LinkedIn", href: "https://www.linkedin.com/in/dhanush-av-618271378/", external: true },
         { label: "Gumroad", href: "https://gumroad.com/products", external: true },
+        { label: "Fiverr", href: "https://www.fiverr.com/dhanushav318?public_mode=true", external: true },
+        { label: "LinkedIn", href: "https://www.linkedin.com/in/dhanush-av-618271378/", external: true },
         { label: "Email", href: "mailto:ro224313@gmail.com", external: true }
       ]
     }
